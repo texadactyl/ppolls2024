@@ -14,7 +14,7 @@ git clone https://github.com/texadactyl/ppolls2024/
 cd ppolls2024
 go install ./...
 ```
-The first time you run ```go install```, you will probably be warned to go get other modules. Do that. Then, continue.
+The first time you run ```go install```, you will probably be warned to ```go get``` other modules. Do that. Then, continue.
 ```
 go install ./...
 ```
