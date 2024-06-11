@@ -31,6 +31,10 @@ ppolls2024 -r tx # Get detailed report for Texas. The string "TX" is also accept
 ppolls2024 -r ec # Get summary report for all states. The string "EC" is also acceptable.
 ```
 
+#### Plots
+
+This is not yet available. You will find under directory ```helpers``` a file called ```plodder.go```. Someday, this will produce plots.
+
 #### Licensing
 
 This is NOT commercial software; instead, usage is covered by the GNU General Public License version 3 (2007). In a nutshell, please feel free to use the project and share it as you will but please don't sell it. Thank you!
