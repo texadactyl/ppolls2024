@@ -14,6 +14,8 @@ type paramsStruct struct {
 	PollHistoryLimit string `yaml:"PollHistoryLimit"`
 	TossupThreshold  string `yaml:"TossupThreshold"`
 	ECVAlgorithm     string `yaml:"ECVAlgorithm"`
+	PlotWidth        string `yaml:"PlotWidth"`
+	PlotHeight       string `yaml:"PlotHeight"`
 }
 
 func GetConfig() {
@@ -38,5 +40,13 @@ func GetConfig() {
 	glob.ECVAlgorithm, err = strconv.Atoi(params.ECVAlgorithm)
 	if err != nil {
 		log.Fatalf("strconv.Atoi(ECVAlgorithm) from %s failed, reason: %s\n", glob.CfgFile, err.Error())
+	}
+	glob.PlotWidth, err = strconv.ParseFloat(params.PlotWidth, 64)
+	if err != nil {
+		log.Fatalf("strconv.ParseFloat(PlotWidth) from %s failed, reason: %s\n", glob.CfgFile, err.Error())
+	}
+	glob.PlotHeight, err = strconv.ParseFloat(params.PlotHeight, 64)
+	if err != nil {
+		log.Fatalf("strconv.ParseFloat(PlotHeight) from %s failed, reason: %s\n", glob.CfgFile, err.Error())
 	}
 }

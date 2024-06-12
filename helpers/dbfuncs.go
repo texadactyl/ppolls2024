@@ -134,18 +134,9 @@ func DBOpen(driverDatabase, dirDatabase, fileDatabase string) {
 		log.Printf("DBOpen: Begin")
 	}
 
-	// Database directory
-	_, err := os.ReadDir(dirDatabase)
-	if err != nil {
-		err := os.Mkdir(dirDatabase, 0755)
-		if err != nil {
-			log.Fatalf("DBOpen: Cannot create database directory(%s), reason:%s", dirDatabase, err.Error())
-		}
-	}
-
 	// Database file
 	pathDatabase = dirDatabase + "/" + fileDatabase
-	_, err = os.Stat(pathDatabase)
+	_, err := os.Stat(pathDatabase)
 	if err != nil {
 		if sqltracing {
 			log.Printf("DBOpen: database file(%s) inaccessible, will create it.",

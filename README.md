@@ -29,11 +29,8 @@ ppolls2024 -f # Download the latest poll data.
 ppolls2024 -l # Load the database with the downloaded data.
 ppolls2024 -r tx # Get detailed report for Texas. The string "TX" is also acceptable.
 ppolls2024 -r ec # Get summary report for all states. The string "EC" is also acceptable.
+ppolls2024 -p # Get plots.
 ```
-
-#### Plots
-
-This is not yet available. You will find under directory ```helpers``` a file called ```plodder.go```. Someday, this will produce plots.
 
 #### Licensing
 

@@ -18,7 +18,8 @@ func showHelp() {
 	fmt.Printf("\t-l:\tLoad poll data from directory csv\n")
 	fmt.Printf("\t-r ID:\tReport by identifier (ID):\n")
 	fmt.Printf("\t\tSC\tSC = state code (E.g. AL).\n")
-	fmt.Printf("\t\tEC\tElectoral College outcome.\n\n")
+	fmt.Printf("\t\tEC\tElectoral College outcome.\n")
+	fmt.Printf("\t-p:\tGenerate plots\n\n")
 	fmt.Printf("Exit codes:\n")
 	fmt.Printf("\t0\tNormal completion.\n")
 	fmt.Printf("\t1\tSomething went wrong during execution.\n\n")
@@ -50,6 +51,8 @@ func main() {
 			glob.FlagFetch = true
 		case "-l":
 			glob.FlagLoad = true
+		case "-p":
+			glob.FlagPlot = true
 		case "-r":
 			ii++
 			rpt = strings.ToUpper(params[ii])
@@ -60,16 +63,24 @@ func main() {
 		}
 	}
 
+	// Create subdirectories.
+	helpers.MakeDir(glob.DbDirectory)
+	helpers.MakeDir(glob.PlotsDirectory)
+	helpers.MakeDir(glob.DirCsvIn)
+
+	// Fetch new data?
 	if glob.FlagFetch {
-		helpers.MakeDir(glob.DirCsvIn)
 		helpers.Fetch(glob.DirCsvIn+glob.LocalCsvFile, glob.InternetCsvFile)
 	}
+
+	// Load CSV into database?
 	if glob.FlagLoad {
 		helpers.DBOpen(glob.DbDriver, glob.DbDirectory, glob.DbFile)
-		helpers.MakeDir(glob.DirCsvIn)
 		helpers.Load(glob.DirCsvIn)
 		helpers.DBClose()
 	}
+
+	// Run a report?
 	if glob.FlagReport {
 		helpers.DBOpen(glob.DbDriver, glob.DbDirectory, glob.DbFile)
 		if rpt == "EC" {
@@ -82,4 +93,11 @@ func main() {
 			helpers.ReportSC(rpt)
 		}
 	}
+
+	// Plots requested?
+	if glob.FlagPlot {
+		helpers.DBOpen(glob.DbDriver, glob.DbDirectory, glob.DbFile)
+		helpers.Plodder()
+	}
+
 }

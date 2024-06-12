@@ -20,13 +20,17 @@ type GlobalsStruct struct {
 	DbDriver         string  // Database driver name
 	DbDirectory      string  // Database directory path
 	DbFile           string  // Database file name + extension
+	PlotsDirectory   string  // Plots directory path
 	CfgFile          string  // Configuration file
 	PollHistoryLimit int     // Cfg: Limit of how many polls are entertained
 	TossupThreshold  float64 // Cfg: Threshold of difference below which a tossup can be inferred
 	ECVAlgorithm     int     // Cfg: ECV distribution algorithm
+	PlotWidth        float64 // Width of plot canvase in dots
+	PlotHeight       float64 // Height of plot canvase in dots
 	FlagFetch        bool    // Fetch new data from the internet? true/false
 	FlagLoad         bool    // Load new data into the database? true/false
 	FlagReport       bool    // Report requested? true/false
+	FlagPlot         bool    // Plots requested? true/false
 }
 
 // Here's the singleton.
@@ -44,20 +48,19 @@ func InitGlobals() *GlobalsStruct {
 	versionString = strings.TrimSpace(versionString)
 
 	global = GlobalsStruct{
-		Version:          versionString,
-		InternetCsvFile:  INTERNET_FILE,
-		LocalCsvFile:     CSV_FILE_NAME,
-		DirCsvIn:         "./csv/",
-		DbDriver:         "sqlite",
-		DbDirectory:      "./database/",
-		DbFile:           "ppolls2024.db",
-		CfgFile:          "config.yaml",
-		PollHistoryLimit: -42,  // dummy value
-		TossupThreshold:  42.0, // dummy value
-		ECVAlgorithm:     42,   // dummy value
-		FlagFetch:        false,
-		FlagLoad:         false,
-		FlagReport:       false,
+		Version:         versionString,
+		InternetCsvFile: INTERNET_FILE,
+		LocalCsvFile:    CSV_FILE_NAME,
+		DirCsvIn:        "./csv/",
+		DbDriver:        "sqlite",
+		DbDirectory:     "./database/",
+		DbFile:          "ppolls2024.db",
+		PlotsDirectory:  "./plots/",
+		CfgFile:         "config.yaml",
+		FlagFetch:       false,
+		FlagLoad:        false,
+		FlagReport:      false,
+		FlagPlot:        false,
 	}
 
 	return &global
