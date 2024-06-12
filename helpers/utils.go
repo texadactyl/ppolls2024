@@ -3,6 +3,7 @@ package helpers
 import (
 	"errors"
 	"fmt"
+	"log"
 	"math"
 	"os"
 	"path/filepath"
@@ -13,23 +14,6 @@ import (
 
 const ModeOutputFile = 0644
 const FlagsOpen = os.O_CREATE | os.O_WRONLY
-
-// Logger - Time-stamp log function
-func Logger(format1 string, args ...interface{}) {
-	now := time.Now()
-	fmtNow := fmt.Sprintf("%s", now.Format("15:04:05 "))
-	format2 := fmtNow + format1
-	fmt.Printf(format2, args...)
-	fmt.Println()
-}
-
-// Display message and die.
-func Croak(format1 string, args ...interface{}) {
-	format2 := "*** FATAL, " + format1
-	fmt.Printf(format2, args...)
-	fmt.Println()
-	os.Exit(1)
-}
 
 // GetUtcDate - Get UTC date string, YYYY-MM-DD
 func GetUtcDate() string {
@@ -49,7 +33,7 @@ func WriteOutputText(outHandle *os.File, textLine string) {
 	_, err := fmt.Fprintln(outHandle, textLine)
 	if err != nil {
 		outPath, _ := filepath.Abs(filepath.Dir(outHandle.Name()))
-		Croak("WriteOutputText: fmt.Fprintln(%s) failed, reason: %s", outPath, err.Error())
+		log.Fatal("WriteOutputText: fmt.Fprintln(%s) failed, reason: %s\n", outPath, err.Error())
 	}
 
 }
@@ -59,18 +43,18 @@ func MakeDir(pathDir string) {
 	info, err := os.Stat(pathDir)
 	if err == nil { // found it
 		if !info.IsDir() { // expected a directory, not a simple file !!
-			Croak("MakeDir: Observed a simple file: %s (expected a directory)", pathDir)
+			log.Fatal("MakeDir: Observed a simple file: %s (expected a directory)\n", pathDir)
 		}
 	} else { // not found or an error occurred
 		if os.IsNotExist(err) {
 			// Create directory
 			err = os.Mkdir(pathDir, 0755)
 			if err != nil {
-				Croak("MakeDir: os.MkDir(%s) failed, reason: %s", pathDir, err)
+				log.Fatal("MakeDir: os.MkDir(%s) failed, reason: %s\n", pathDir, err)
 			}
-			Logger("MakeDir: %s was created", pathDir)
+			log.Printf("MakeDir: %s was created\n", pathDir)
 		} else { // some type of error
-			Croak("MakeDir: os.Stat(%s) failed, reason: %s", pathDir, err.Error())
+			log.Fatal("MakeDir: os.Stat(%s) failed, reason: %s\n", pathDir, err.Error())
 		}
 	}
 }
@@ -81,14 +65,14 @@ func StoreText(targetDir string, argFile string, text string) {
 	fullPath := filepath.Join(targetDir, argFile)
 	outHandle, err := os.Create(fullPath)
 	if err != nil {
-		Croak("storeText: os.Create(%s) failed, reason: %s", fullPath, err.Error())
+		log.Fatal("storeText: os.Create(%s) failed, reason: %s\n", fullPath, err.Error())
 	}
 	defer outHandle.Close()
 
 	// Store the given text
 	_, err = fmt.Fprintln(outHandle, text)
 	if err != nil {
-		Croak("storeText: fmt.Fprintln(%s) failed, reason: %s", fullPath, err.Error())
+		log.Fatal("storeText: fmt.Fprintln(%s) failed, reason: %s\n", fullPath, err.Error())
 	}
 }
 

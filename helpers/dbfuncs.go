@@ -3,6 +3,7 @@ package helpers
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	_ "modernc.org/sqlite"
 	"os"
 )
@@ -46,19 +47,19 @@ Internal function to run an SQL statement and handle any errors.
 func sqlFunc(text string) {
 
 	if sqltracing {
-		Logger("sqlFunc: %s", text)
+		log.Printf("sqlFunc: %s\n", text)
 	}
 
 	statement, err := sqliteDatabase.Prepare(text) // Prepare SQL Statement
 	if err != nil {
-		Croak("sqlFunc: sqliteDatabase.Prepare failed\n%s\nreason: %s",
+		log.Fatal("sqlFunc: sqliteDatabase.Prepare failed\n%s\nreason: %s\n",
 			text,
 			err.Error())
 	}
 
 	_, err = statement.Exec() // Execute SQL Statements
 	if err != nil {
-		Croak("sqlFunc: statement.Exec failed\n%s\nreason:%s",
+		log.Fatal("sqlFunc: statement.Exec failed\n%s\nreason:%s\n",
 			text,
 			err.Error())
 	}
@@ -71,12 +72,12 @@ Internal function to run an SQL select query and handle any errors. The output i
 func sqlQuery(text string) *sql.Rows {
 
 	if sqltracing {
-		Logger("sqlQuery: %s", text)
+		log.Printf("sqlQuery: %s\n", text)
 	}
 
 	rows, err := sqliteDatabase.Query(text)
 	if err != nil {
-		Croak("sqlQuery: sqliteDatabase.Query failed\n%s\nreason: %s",
+		log.Fatal("sqlQuery: sqliteDatabase.Query failed\n%s\nreason: %s\n",
 			text,
 			err.Error())
 	}
@@ -95,7 +96,7 @@ Internal function to initialise a jacotest database.
 func initDB() {
 
 	if sqltracing {
-		Logger("initDB: Begin")
+		log.Println("initDB: Begin")
 	}
 
 	sqlText := "CREATE TABLE " + tableHistory + " ("
@@ -114,7 +115,7 @@ func initDB() {
 	sqlFunc(sqlText)
 
 	if sqltracing {
-		Logger("initDB: End")
+		log.Println("initDB: End")
 	}
 
 }
@@ -130,7 +131,7 @@ DBOpen - Database Open
 func DBOpen(driverDatabase, dirDatabase, fileDatabase string) {
 
 	if sqltracing {
-		Logger("DBOpen: Begin")
+		log.Printf("DBOpen: Begin")
 	}
 
 	// Database directory
@@ -138,7 +139,7 @@ func DBOpen(driverDatabase, dirDatabase, fileDatabase string) {
 	if err != nil {
 		err := os.Mkdir(dirDatabase, 0755)
 		if err != nil {
-			Croak("DBOpen: Cannot create database directory(%s), reason:%s", dirDatabase, err.Error())
+			log.Fatal("DBOpen: Cannot create database directory(%s), reason:%s", dirDatabase, err.Error())
 		}
 	}
 
@@ -147,30 +148,30 @@ func DBOpen(driverDatabase, dirDatabase, fileDatabase string) {
 	_, err = os.Stat(pathDatabase)
 	if err != nil {
 		if sqltracing {
-			Logger("DBOpen: database file(%s) inaccessible, will create it.",
+			log.Printf("DBOpen: database file(%s) inaccessible, will create it.",
 				pathDatabase)
 		}
 		sqliteDatabase, err = sql.Open(driverDatabase, pathDatabase)
 		if err != nil {
-			Croak("DBOpen: sql.Open/create(%s) failed, reason: %s",
+			log.Fatal("DBOpen: sql.Open/create(%s) failed, reason: %s",
 				pathDatabase,
 				err.Error())
 		}
 		initDB()
 
 		if sqltracing {
-			Logger("DBOpen: End, database created")
+			log.Printf("DBOpen: End, database created")
 		}
 		return
 	}
 
 	// Connect to pre-existing database
 	if sqltracing {
-		Logger("DBOpen database file exists")
+		log.Printf("DBOpen database file exists")
 	}
 	sqliteDatabase, err = sql.Open(driverDatabase, pathDatabase)
 	if err != nil {
-		Croak("DBOpen: sql.Open/pre-existing(%s) failed, reason: %s",
+		log.Fatal("DBOpen: sql.Open/pre-existing(%s) failed, reason: %s",
 			pathDatabase,
 			err.Error())
 	}
@@ -178,7 +179,7 @@ func DBOpen(driverDatabase, dirDatabase, fileDatabase string) {
 	// sqliteDatabase stays open until process exit
 
 	if sqltracing {
-		Logger("DBOpen: End, existing database opened")
+		log.Printf("DBOpen: End, existing database opened")
 	}
 
 }
@@ -189,18 +190,18 @@ DBClose - Close the database.
 func DBClose() {
 
 	if sqltracing {
-		Logger("DBClose: Begin")
+		log.Printf("DBClose: Begin")
 	}
 
 	err := sqliteDatabase.Close()
 	if err != nil {
-		Croak("DBOpen: sql.Close(%s) failed, reason: %s",
+		log.Fatal("DBOpen: sql.Close(%s) failed, reason: %s",
 			pathDatabase,
 			err.Error())
 	}
 
 	if sqltracing {
-		Logger("DBClose: End")
+		log.Printf("DBClose: End")
 	}
 
 }

@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"fmt"
+	"log"
 	"ppolls2024/global"
 )
 
@@ -19,7 +20,7 @@ func ReportSC(state string) {
 
 	// Get all the selected history table rows.
 	counter := 0
-	Logger("State report: %s", state)
+	log.Printf("State report: %s\n", state)
 	rows := sqlQuery(sqlText)
 
 	// For each row, process it...
@@ -28,7 +29,7 @@ func ReportSC(state string) {
 		counter += 1
 		err := rows.Scan(&query.state, &query.endDate, &query.pctBiden, &query.pctTrump, &query.pollster)
 		if err != nil {
-			Croak("ReportSC: rows.Scan failed, row count: %d, reason: %s", counter, err.Error())
+			log.Fatal("ReportSC: rows.Scan failed, row count: %d, reason: %s\n", counter, err.Error())
 		}
 		other := calcOther(query.pctBiden, query.pctTrump)
 		fmt.Printf("%-8s  %4.1f  %4.1f  %4.1f  %-s\n", query.endDate, query.pctBiden, query.pctTrump, other, query.pollster)
@@ -68,7 +69,7 @@ func ReportEC() {
 			counter += 1
 			err := rows.Scan(&query.endDate, &query.pctBiden, &query.pctTrump)
 			if err != nil {
-				Croak("ReportEC: rows.Scan failed, row count: %d, reason: %s", counter, err.Error())
+				log.Fatal("ReportEC: rows.Scan failed, row count: %d, reason: %s\n", counter, err.Error())
 			}
 			if counter == 1 {
 				endDate = query.endDate
@@ -92,7 +93,7 @@ func ReportEC() {
 		case 2:
 			winner, increBiden, increTrump, increTossup = ECVAward2(stateECV.votes, aveBidenPct, aveTrumpPct)
 		default:
-			Croak("ReportEC: global.ECVAlgoithm %d is not supported", glob.ECVAlgorithm)
+			log.Fatal("ReportEC: global.ECVAlgoithm %d is not supported\n", glob.ECVAlgorithm)
 		}
 
 		totalBidenECV += increBiden

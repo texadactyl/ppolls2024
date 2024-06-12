@@ -14,7 +14,7 @@ import (
 
 // https://www.w3schools.com/css/css_colors_rgb.asp
 
-func plodder() {
+func plotOneState() {
 	RED := color.NRGBA{R: 255, A: 255}
 	//GREEN := color.NRGBA{G: 255, A: 255}
 	BLUE := color.NRGBA{B: 255, A: 255}
