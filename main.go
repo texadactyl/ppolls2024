@@ -73,7 +73,7 @@ func main() {
 		helpers.Fetch(glob.DirCsvIn+glob.LocalCsvFile, glob.InternetCsvFile)
 	}
 
-	// Load CSV into database?
+	// Load newly-fetched data into the database?
 	if glob.FlagLoad {
 		helpers.DBOpen(glob.DbDriver, glob.DbDirectory, glob.DbFile)
 		helpers.Load(glob.DirCsvIn)
@@ -94,7 +94,7 @@ func main() {
 		}
 	}
 
-	// Plots requested?
+	// Generate plots?
 	if glob.FlagPlot {
 		helpers.DBOpen(glob.DbDriver, glob.DbDirectory, glob.DbFile)
 		helpers.Plodder()
