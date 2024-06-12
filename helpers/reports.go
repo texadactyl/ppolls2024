@@ -29,7 +29,7 @@ func ReportSC(state string) {
 		counter += 1
 		err := rows.Scan(&query.state, &query.endDate, &query.pctBiden, &query.pctTrump, &query.pollster)
 		if err != nil {
-			log.Fatal("ReportSC: rows.Scan failed, row count: %d, reason: %s\n", counter, err.Error())
+			log.Fatalf("ReportSC: rows.Scan failed, row count: %d, reason: %s\n", counter, err.Error())
 		}
 		other := calcOther(query.pctBiden, query.pctTrump)
 		fmt.Printf("%-8s  %4.1f  %4.1f  %4.1f  %-s\n", query.endDate, query.pctBiden, query.pctTrump, other, query.pollster)
@@ -69,7 +69,7 @@ func ReportEC() {
 			counter += 1
 			err := rows.Scan(&query.endDate, &query.pctBiden, &query.pctTrump)
 			if err != nil {
-				log.Fatal("ReportEC: rows.Scan failed, row count: %d, reason: %s\n", counter, err.Error())
+				log.Fatalf("ReportEC: rows.Scan failed, row count: %d, reason: %s\n", counter, err.Error())
 			}
 			if counter == 1 {
 				endDate = query.endDate
@@ -93,7 +93,7 @@ func ReportEC() {
 		case 2:
 			winner, increBiden, increTrump, increTossup = ECVAward2(stateECV.votes, aveBidenPct, aveTrumpPct)
 		default:
-			log.Fatal("ReportEC: global.ECVAlgoithm %d is not supported\n", glob.ECVAlgorithm)
+			log.Fatalf("ReportEC: global.ECVAlgoithm %d is not supported\n", glob.ECVAlgorithm)
 		}
 
 		totalBidenECV += increBiden

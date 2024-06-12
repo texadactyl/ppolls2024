@@ -33,7 +33,7 @@ func WriteOutputText(outHandle *os.File, textLine string) {
 	_, err := fmt.Fprintln(outHandle, textLine)
 	if err != nil {
 		outPath, _ := filepath.Abs(filepath.Dir(outHandle.Name()))
-		log.Fatal("WriteOutputText: fmt.Fprintln(%s) failed, reason: %s\n", outPath, err.Error())
+		log.Fatalf("WriteOutputText: fmt.Fprintln(%s) failed, reason: %s\n", outPath, err.Error())
 	}
 
 }
@@ -50,11 +50,11 @@ func MakeDir(pathDir string) {
 			// Create directory
 			err = os.Mkdir(pathDir, 0755)
 			if err != nil {
-				log.Fatal("MakeDir: os.MkDir(%s) failed, reason: %s\n", pathDir, err)
+				log.Fatalf("MakeDir: os.MkDir(%s) failed, reason: %s\n", pathDir, err)
 			}
 			log.Printf("MakeDir: %s was created\n", pathDir)
 		} else { // some type of error
-			log.Fatal("MakeDir: os.Stat(%s) failed, reason: %s\n", pathDir, err.Error())
+			log.Fatalf("MakeDir: os.Stat(%s) failed, reason: %s\n", pathDir, err.Error())
 		}
 	}
 }
@@ -65,14 +65,14 @@ func StoreText(targetDir string, argFile string, text string) {
 	fullPath := filepath.Join(targetDir, argFile)
 	outHandle, err := os.Create(fullPath)
 	if err != nil {
-		log.Fatal("storeText: os.Create(%s) failed, reason: %s\n", fullPath, err.Error())
+		log.Fatalf("storeText: os.Create(%s) failed, reason: %s\n", fullPath, err.Error())
 	}
 	defer outHandle.Close()
 
 	// Store the given text
 	_, err = fmt.Fprintln(outHandle, text)
 	if err != nil {
-		log.Fatal("storeText: fmt.Fprintln(%s) failed, reason: %s\n", fullPath, err.Error())
+		log.Fatalf("storeText: fmt.Fprintln(%s) failed, reason: %s\n", fullPath, err.Error())
 	}
 }
 

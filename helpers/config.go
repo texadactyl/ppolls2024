@@ -21,22 +21,22 @@ func GetConfig() {
 	glob := global.GetGlobalRef()
 	bytes, err := os.ReadFile(glob.CfgFile)
 	if err != nil {
-		log.Fatal("os.ReadFile(%s) failed, reason: %s\n", glob.CfgFile, err.Error())
+		log.Fatalf("os.ReadFile(%s) failed, reason: %s\n", glob.CfgFile, err.Error())
 	}
 	err = yaml.Unmarshal(bytes, &params)
 	if err != nil {
-		log.Fatal("yaml.Unmarshal from %s failed, reason: %s\n", glob.CfgFile, err.Error())
+		log.Fatalf("yaml.Unmarshal from %s failed, reason: %s\n", glob.CfgFile, err.Error())
 	}
 	glob.PollHistoryLimit, err = strconv.Atoi(params.PollHistoryLimit)
 	if err != nil {
-		log.Fatal("strconv.Atoi(PollHistoryLimit) from %s failed, reason: %s\n", glob.CfgFile, err.Error())
+		log.Fatalf("strconv.Atoi(PollHistoryLimit) from %s failed, reason: %s\n", glob.CfgFile, err.Error())
 	}
 	glob.TossupThreshold, err = strconv.ParseFloat(params.TossupThreshold, 64)
 	if err != nil {
-		log.Fatal("strconv.ParseFloat(TossupThreshold) from %s failed, reason: %s\n", glob.CfgFile, err.Error())
+		log.Fatalf("strconv.ParseFloat(TossupThreshold) from %s failed, reason: %s\n", glob.CfgFile, err.Error())
 	}
 	glob.ECVAlgorithm, err = strconv.Atoi(params.ECVAlgorithm)
 	if err != nil {
-		log.Fatal("strconv.Atoi(ECVAlgorithm) from %s failed, reason: %s\n", glob.CfgFile, err.Error())
+		log.Fatalf("strconv.Atoi(ECVAlgorithm) from %s failed, reason: %s\n", glob.CfgFile, err.Error())
 	}
 }

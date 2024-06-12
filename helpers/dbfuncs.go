@@ -52,14 +52,14 @@ func sqlFunc(text string) {
 
 	statement, err := sqliteDatabase.Prepare(text) // Prepare SQL Statement
 	if err != nil {
-		log.Fatal("sqlFunc: sqliteDatabase.Prepare failed\n%s\nreason: %s\n",
+		log.Fatalf("sqlFunc: sqliteDatabase.Prepare failed\n%s\nreason: %s\n",
 			text,
 			err.Error())
 	}
 
 	_, err = statement.Exec() // Execute SQL Statements
 	if err != nil {
-		log.Fatal("sqlFunc: statement.Exec failed\n%s\nreason:%s\n",
+		log.Fatalf("sqlFunc: statement.Exec failed\n%s\nreason:%s\n",
 			text,
 			err.Error())
 	}
@@ -77,7 +77,7 @@ func sqlQuery(text string) *sql.Rows {
 
 	rows, err := sqliteDatabase.Query(text)
 	if err != nil {
-		log.Fatal("sqlQuery: sqliteDatabase.Query failed\n%s\nreason: %s\n",
+		log.Fatalf("sqlQuery: sqliteDatabase.Query failed\n%s\nreason: %s\n",
 			text,
 			err.Error())
 	}
@@ -139,7 +139,7 @@ func DBOpen(driverDatabase, dirDatabase, fileDatabase string) {
 	if err != nil {
 		err := os.Mkdir(dirDatabase, 0755)
 		if err != nil {
-			log.Fatal("DBOpen: Cannot create database directory(%s), reason:%s", dirDatabase, err.Error())
+			log.Fatalf("DBOpen: Cannot create database directory(%s), reason:%s", dirDatabase, err.Error())
 		}
 	}
 
@@ -153,7 +153,7 @@ func DBOpen(driverDatabase, dirDatabase, fileDatabase string) {
 		}
 		sqliteDatabase, err = sql.Open(driverDatabase, pathDatabase)
 		if err != nil {
-			log.Fatal("DBOpen: sql.Open/create(%s) failed, reason: %s",
+			log.Fatalf("DBOpen: sql.Open/create(%s) failed, reason: %s",
 				pathDatabase,
 				err.Error())
 		}
@@ -171,7 +171,7 @@ func DBOpen(driverDatabase, dirDatabase, fileDatabase string) {
 	}
 	sqliteDatabase, err = sql.Open(driverDatabase, pathDatabase)
 	if err != nil {
-		log.Fatal("DBOpen: sql.Open/pre-existing(%s) failed, reason: %s",
+		log.Fatalf("DBOpen: sql.Open/pre-existing(%s) failed, reason: %s",
 			pathDatabase,
 			err.Error())
 	}
@@ -195,7 +195,7 @@ func DBClose() {
 
 	err := sqliteDatabase.Close()
 	if err != nil {
-		log.Fatal("DBOpen: sql.Close(%s) failed, reason: %s",
+		log.Fatalf("DBOpen: sql.Close(%s) failed, reason: %s",
 			pathDatabase,
 			err.Error())
 	}
