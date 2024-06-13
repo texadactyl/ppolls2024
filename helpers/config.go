@@ -23,30 +23,41 @@ func GetConfig() {
 	glob := global.GetGlobalRef()
 	bytes, err := os.ReadFile(glob.CfgFile)
 	if err != nil {
-		log.Fatalf("os.ReadFile(%s) failed, reason: %s\n", glob.CfgFile, err.Error())
+		log.Fatalf("GetConfig: os.ReadFile(%s) failed, reason: %s\n", glob.CfgFile, err.Error())
 	}
 	err = yaml.Unmarshal(bytes, &params)
 	if err != nil {
 		log.Fatalf("yaml.Unmarshal from %s failed, reason: %s\n", glob.CfgFile, err.Error())
 	}
+
 	glob.PollHistoryLimit, err = strconv.Atoi(params.PollHistoryLimit)
 	if err != nil {
 		log.Fatalf("strconv.Atoi(PollHistoryLimit) from %s failed, reason: %s\n", glob.CfgFile, err.Error())
 	}
+	log.Printf("GetConfig: PollHistoryLimit: %d", glob.PollHistoryLimit)
+
 	glob.TossupThreshold, err = strconv.ParseFloat(params.TossupThreshold, 64)
 	if err != nil {
-		log.Fatalf("strconv.ParseFloat(TossupThreshold) from %s failed, reason: %s\n", glob.CfgFile, err.Error())
+		log.Fatalf("GetConfig: strconv.ParseFloat(TossupThreshold) from %s failed, reason: %s\n", glob.CfgFile, err.Error())
 	}
+	log.Printf("GetConfig: TossupThreshold: %f", glob.TossupThreshold)
+
 	glob.ECVAlgorithm, err = strconv.Atoi(params.ECVAlgorithm)
 	if err != nil {
+
 		log.Fatalf("strconv.Atoi(ECVAlgorithm) from %s failed, reason: %s\n", glob.CfgFile, err.Error())
 	}
+	log.Printf("GetConfig: ECVAlgorithm: %d", glob.ECVAlgorithm)
+
 	glob.PlotWidth, err = strconv.ParseFloat(params.PlotWidth, 64)
 	if err != nil {
-		log.Fatalf("strconv.ParseFloat(PlotWidth) from %s failed, reason: %s\n", glob.CfgFile, err.Error())
+		log.Fatalf("GetConfig: strconv.ParseFloat(PlotWidth) from %s failed, reason: %s\n", glob.CfgFile, err.Error())
 	}
+	log.Printf("GetConfig: PlotWidth: %f", glob.PlotWidth)
+
 	glob.PlotHeight, err = strconv.ParseFloat(params.PlotHeight, 64)
 	if err != nil {
-		log.Fatalf("strconv.ParseFloat(PlotHeight) from %s failed, reason: %s\n", glob.CfgFile, err.Error())
+		log.Fatalf("GetConfig: strconv.ParseFloat(PlotHeight) from %s failed, reason: %s\n", glob.CfgFile, err.Error())
 	}
+	log.Printf("GetConfig: PlotHeight: %f", glob.PlotHeight)
 }

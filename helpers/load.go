@@ -9,15 +9,20 @@ import (
 	"strings"
 )
 
-func loadOneCsv(absPath string) {
+func Load(dirCsv, fileName string) {
 	var pollTable []string
 	var pollFields dbparams
 
-	// Get the EV table file contents as a slice of strings.
-	fileBytes, err := os.ReadFile(absPath)
+	// Form the full path of the CSV file.
+	fullPath := filepath.Join(dirCsv, fileName)
+
+	// Get the ECV table file contents as a slice of strings.
+	fileBytes, err := os.ReadFile(fullPath)
 	if err != nil {
-		log.Fatalf("loadOneCsv: ReadFile(%s) failed, reason: %s\n", absPath, err.Error())
+		log.Fatalf("Load: ReadFile(%s) failed, reason: %s\n", fullPath, err.Error())
 	}
+
+	// Create a table of strings.
 	giantString := string(fileBytes)
 	pollTable = strings.Split(string(giantString), "\n")
 
@@ -37,35 +42,35 @@ func loadOneCsv(absPath string) {
 			continue
 		}
 		if len(colArray) < 9 {
-			log.Fatalf("loadOneCsv: File %s malformed at line %d, ncols: %d\n", absPath, lineCounter, len(colArray))
+			log.Fatalf("Load: File %s malformed at line %d, ncols: %d\n", fullPath, lineCounter, len(colArray))
 		}
 
 		// Collect all the column values.
 		pollFields.state = strings.ToUpper(colArray[0])
 		pollFields.pctBiden, err = strconv.ParseFloat(colArray[1], 64)
 		if err != nil {
-			log.Fatalf("loadOneCsv: Biden pct from %s is not a valid float at line %d\n", absPath, lineCounter)
+			log.Fatalf("Load: Biden pct from %s is not a valid float at line %d\n", fullPath, lineCounter)
 		}
 		pollFields.pctTrump, err = strconv.ParseFloat(colArray[2], 64)
 		if err != nil {
-			log.Fatalf("loadOneCsv: Trump pct from %s is not a valid float at line %d\n", absPath, lineCounter)
+			log.Fatalf("Load: Trump pct from %s is not a valid float at line %d\n", fullPath, lineCounter)
 		}
 		month, err := MonthToInt(colArray[4])
 		if err != nil {
-			log.Fatalf("loadOneCsv: start month from %s at line %d: %s\n", absPath, lineCounter, err.Error())
+			log.Fatalf("Load: start month from %s at line %d: %s\n", fullPath, lineCounter, err.Error())
 		}
 		day, err := strconv.ParseInt(colArray[5], 10, 64)
 		if err != nil {
-			log.Fatalf("loadOneCsv: start day from %s is not a valid integer at line %d\n", absPath, lineCounter)
+			log.Fatalf("Load: start day from %s is not a valid integer at line %d\n", fullPath, lineCounter)
 		}
 		pollFields.startDate = fmt.Sprintf("2024-%02d-%02d", month, day)
 		month, err = MonthToInt(colArray[6])
 		if err != nil {
-			log.Fatalf("loadOneCsv: end month from %s at line %d: %s\n", absPath, lineCounter, err.Error())
+			log.Fatalf("Load: end month from %s at line %d: %s\n", fullPath, lineCounter, err.Error())
 		}
 		day, err = strconv.ParseInt(colArray[7], 10, 64)
 		if err != nil {
-			log.Fatalf("loadOneCsv: end day from %s is not a valid integer at line %d\n", absPath, lineCounter)
+			log.Fatalf("Load: end day from %s is not a valid integer at line %d\n", fullPath, lineCounter)
 		}
 		pollFields.endDate = fmt.Sprintf("2024-%02d-%02d", month, day)
 		pollFields.pollster = strings.Join(colArray[8:], " ")
@@ -75,36 +80,4 @@ func loadOneCsv(absPath string) {
 	}
 
 	log.Printf("Loaded %d records into the database\n", lineCounter)
-
-}
-
-func Load(dirCsvIn string) {
-	entries, err := os.ReadDir(dirCsvIn)
-	if err != nil {
-		log.Fatalf("Load: os.ReadDir(%s) failed, reason: %s\n", dirCsvIn, err.Error())
-	}
-	for _, dirEntry := range entries {
-		fileName := dirEntry.Name()
-
-		// Get full path of file name
-		fullPathFile := filepath.Join(dirCsvIn, fileName)
-
-		// If a directory, we will skip it
-		fileInfo, err := os.Stat(fullPathFile)
-		if err != nil {
-			log.Fatalf("Load: os.Stat(%s) failed, reason: %s\n", fullPathFile, err.Error())
-		}
-		if fileInfo.IsDir() {
-			continue
-		}
-
-		// Not a directory.
-		// If not a .csv file, skip it
-		if filepath.Ext(fileName) != ".csv" {
-			continue
-		}
-
-		loadOneCsv(fullPathFile)
-	}
-
 }

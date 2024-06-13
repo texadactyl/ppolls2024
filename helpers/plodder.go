@@ -87,7 +87,7 @@ func plotOneState(state string, endDateArray []string, bidenPctArray, trumpPctAr
 	glob := global.GetGlobalRef()
 	err = plt.Save(vg.Length(glob.PlotWidth)*vg.Centimeter,
 		vg.Length(glob.PlotHeight)*vg.Centimeter,
-		fmt.Sprintf("%s/%s.png", glob.PlotsDirectory, state))
+		fmt.Sprintf("%s/%s.png", glob.DirPlots, state))
 	if err != nil {
 		log.Fatalln(err.Error())
 	}

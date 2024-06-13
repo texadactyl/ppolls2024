@@ -64,25 +64,26 @@ func main() {
 	}
 
 	// Create subdirectories.
-	helpers.MakeDir(glob.DbDirectory)
-	helpers.MakeDir(glob.PlotsDirectory)
-	helpers.MakeDir(glob.DirCsvIn)
+	helpers.MakeDir(glob.DirCsv)
+	helpers.MakeDir(glob.DirDatabase)
+	helpers.MakeDir(glob.DirPlots)
+	helpers.MakeDir(glob.DirTemp)
 
 	// Fetch new data?
 	if glob.FlagFetch {
-		helpers.Fetch(glob.DirCsvIn+glob.LocalCsvFile, glob.InternetCsvFile)
+		helpers.Fetch(glob.DirCsv, glob.LocalCsvFile, glob.InternetCsvFile, glob.DirTemp)
 	}
 
 	// Load newly-fetched data into the database?
 	if glob.FlagLoad {
-		helpers.DBOpen(glob.DbDriver, glob.DbDirectory, glob.DbFile)
-		helpers.Load(glob.DirCsvIn)
+		helpers.DBOpen(glob.DbDriver, glob.DirDatabase, glob.DbFile)
+		helpers.Load(glob.DirCsv, glob.LocalCsvFile)
 		helpers.DBClose()
 	}
 
 	// Run a report?
 	if glob.FlagReport {
-		helpers.DBOpen(glob.DbDriver, glob.DbDirectory, glob.DbFile)
+		helpers.DBOpen(glob.DbDriver, glob.DirDatabase, glob.DbFile)
 		if rpt == "EC" {
 			helpers.ReportEC()
 		} else {
@@ -96,7 +97,7 @@ func main() {
 
 	// Generate plots?
 	if glob.FlagPlot {
-		helpers.DBOpen(glob.DbDriver, glob.DbDirectory, glob.DbFile)
+		helpers.DBOpen(glob.DbDriver, glob.DirDatabase, glob.DbFile)
 		helpers.Plodder()
 	}
 

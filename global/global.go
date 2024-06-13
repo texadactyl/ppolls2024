@@ -16,11 +16,12 @@ type GlobalsStruct struct {
 	Version          string  // Software version string
 	InternetCsvFile  string  // INTERNET_PREFIX + CSV_FILE_NAME + ".txt"
 	LocalCsvFile     string  // CSV file name + extension
-	DirCsvIn         string  // CSV input directory (before database load)
+	DirCsv           string  // CSV input directory (before database load)
+	DirDatabase      string  // Database directory path
+	DirPlots         string  // Plots directory path
+	DirTemp          string  // Temporary holding area directory path
 	DbDriver         string  // Database driver name
-	DbDirectory      string  // Database directory path
 	DbFile           string  // Database file name + extension
-	PlotsDirectory   string  // Plots directory path
 	CfgFile          string  // Configuration file
 	PollHistoryLimit int     // Cfg: Limit of how many polls are entertained
 	TossupThreshold  float64 // Cfg: Threshold of difference below which a tossup can be inferred
@@ -51,11 +52,12 @@ func InitGlobals() *GlobalsStruct {
 		Version:         versionString,
 		InternetCsvFile: INTERNET_FILE,
 		LocalCsvFile:    CSV_FILE_NAME,
-		DirCsvIn:        "./csv/",
-		DbDriver:        "sqlite",
-		DbDirectory:     "./database/",
+		DirCsv:          "./csv/",
+		DirDatabase:     "./database/",
+		DirPlots:        "./plots/",
+		DirTemp:         "./temp/",
 		DbFile:          "ppolls2024.db",
-		PlotsDirectory:  "./plots/",
+		DbDriver:        "sqlite",
 		CfgFile:         "config.yaml",
 		FlagFetch:       false,
 		FlagLoad:        false,
