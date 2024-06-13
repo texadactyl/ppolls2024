@@ -45,12 +45,17 @@ func Fetch(dirCsv, fileName, url, dirTemp string) {
 	if err != nil {
 		log.Fatalf("*** ERROR, os.Create(%s) failed, reason: %s\n", pathTempCSV, err.Error())
 	}
-	defer outf.Close()
 
 	// Write the response body to the temp CSV file.
 	_, err = io.Copy(outf, resp.Body)
 	if err != nil {
 		log.Fatalf("*** ERROR, io.Copy(%s) failed, reason: %s\n", pathTempCSV, err.Error())
+	}
+
+	// Close the temp CSV file.
+	err = outf.Close()
+	if err != nil {
+		log.Fatalf("*** ERROR, os.Close(%s) failed, reason: %s\n", pathTempCSV, err.Error())
 	}
 
 	// Compute checksum for current CSV file.
