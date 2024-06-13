@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 	"ppolls2024/global"
@@ -87,10 +86,6 @@ func main() {
 		if rpt == "EC" {
 			helpers.ReportEC()
 		} else {
-			_, err := helpers.StateToECV(rpt)
-			if err != nil {
-				log.Fatalf("main: helpers.StateToECV(%s) failed, reason: %s", rpt, err.Error())
-			}
 			helpers.ReportSC(rpt)
 		}
 	}

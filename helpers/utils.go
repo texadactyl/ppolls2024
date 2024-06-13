@@ -165,15 +165,46 @@ var stateECVTable = []ECVote{
 	{"WY", 3},
 }
 
-func StateToECV(state string) (int, error) {
+// Given a state, return the ECV for that state.
+func StateToECV(state string) int {
 	arg := strings.ToUpper(state)
 	for ii := 0; ii < len(stateECVTable); ii++ {
 		if arg == stateECVTable[ii].state {
-			return stateECVTable[ii].votes, nil
+			return stateECVTable[ii].votes
 		}
 	}
-	errMsg := fmt.Sprintf("invalid state code (%s)", state)
-	return -1, errors.New(errMsg)
+	log.Fatalf(fmt.Sprintf("StateToECV: invalid state code (%s)", state))
+	return -1 // dummy return
+}
+
+// Calculate not Biden nor Trump.
+func CalcOther(biden, trump float64) float64 {
+	return 100.0 - (biden + trump)
+}
+
+// Trend calculation.
+// If less than 3 points, return "--".
+// If rising, return "up".
+// If falling, return "dn".
+// Otherwise, return "--".
+func CalcTrend(array []float64) string {
+	num := len(array)
+	if num < 3 {
+		return "--"
+	}
+	if array[num-1] > array[num-2] {
+		if array[num-2] > array[num-3] {
+			return "u2"
+		}
+		return "u1"
+	}
+	if array[num-1] < array[num-2] {
+		if array[num-2] < array[num-3] {
+			return "d2"
+		}
+		return "d1"
+	}
+	return "--"
 }
 
 /*
@@ -184,7 +215,7 @@ then the outcome is a tossup.
 */
 func ECVAward1(stateVotes int, pctBiden, pctTrump float64) (string, int, int, int) {
 	glob := global.GetGlobalRef()
-	pctOther := calcOther(pctBiden, pctTrump)
+	pctOther := CalcOther(pctBiden, pctTrump)
 	diff := math.Abs(pctBiden + pctTrump)
 	if (diff - pctOther) < glob.TossupThreshold {
 		return "TOSSUP", 0, 0, stateVotes
@@ -205,7 +236,7 @@ If the new totals have a difference below glob.TossupThreshold, then the outcome
 */
 func ECVAward2(stateVotes int, pctBiden, pctTrump float64) (string, int, int, int) {
 	glob := global.GetGlobalRef()
-	pctOther := calcOther(pctBiden, pctTrump)
+	pctOther := CalcOther(pctBiden, pctTrump)
 	pctBiden += pctOther * pctBiden / 100.0
 	pctTrump += pctOther * pctTrump / 100.0
 

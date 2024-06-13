@@ -6,10 +6,6 @@ import (
 	"ppolls2024/global"
 )
 
-func calcOther(biden, trump float64) float64 {
-	return 100.0 - (biden + trump)
-}
-
 func ReportSC(state string) {
 	glob := global.GetGlobalRef()
 	// Query record
@@ -31,7 +27,7 @@ func ReportSC(state string) {
 		if err != nil {
 			log.Fatalf("ReportSC: rows.Scan failed, row count: %d, reason: %s\n", counter, err.Error())
 		}
-		other := calcOther(query.pctBiden, query.pctTrump)
+		other := CalcOther(query.pctBiden, query.pctTrump)
 		fmt.Printf("%-8s  %4.1f  %4.1f  %4.1f  %-s\n", query.endDate, query.pctBiden, query.pctTrump, other, query.pollster)
 		if counter >= glob.PollHistoryLimit {
 			break
@@ -51,8 +47,11 @@ func ReportEC() {
 	listBidenStates := ""
 	listTrumpStates := ""
 	listTossupStates := ""
-	prtDivider := "----------------------------------------------"
-	fmt.Println("\nSt  EV  Last Poll   Biden Trump  Other  Winner")
+	var arrayBidenPct []float64
+	var arrayTrumpPct []float64
+	var arrayOtherPct []float64
+	prtDivider := "--------------------------------------------------------"
+	fmt.Println("\nSt  EV  Last Poll   Biden     Trump      Other    Winner")
 	fmt.Println(prtDivider)
 	for _, stateECV = range stateECVTable {
 		// For the given state, query from the most recent to the least recent polling.
@@ -75,7 +74,10 @@ func ReportEC() {
 				endDate = query.endDate
 			}
 			aveBidenPct += query.pctBiden
+			arrayBidenPct = append(arrayBidenPct, query.pctBiden)
 			aveTrumpPct += query.pctTrump
+			arrayTrumpPct = append(arrayTrumpPct, query.pctTrump)
+			arrayOtherPct = append(arrayOtherPct, CalcOther(query.pctBiden, query.pctTrump))
 			if counter >= glob.PollHistoryLimit {
 				break
 			}
@@ -84,7 +86,7 @@ func ReportEC() {
 		// Averages for this state.
 		aveBidenPct /= float64(counter)
 		aveTrumpPct /= float64(counter)
-		otherPct := calcOther(aveBidenPct, aveTrumpPct)
+		aveOtherPct := CalcOther(aveBidenPct, aveTrumpPct)
 		winner := ""
 		var increBiden, increTrump, increTossup int
 		switch glob.ECVAlgorithm {
@@ -112,7 +114,11 @@ func ReportEC() {
 		}
 
 		// Show results for current state.
-		fmt.Printf("%-2s  %2d  %-8s  %4.1f  %4.1f  %4.1f    %-s\n", stateECV.state, stateECV.votes, endDate, aveBidenPct, aveTrumpPct, otherPct, winner)
+		bidenTrend := CalcTrend(arrayBidenPct)
+		trumpTrend := CalcTrend(arrayTrumpPct)
+		otherTrend := CalcTrend(arrayOtherPct)
+		fmt.Printf("%-2s  %2d  %-8s  %4.1f  %s  %4.1f  %s  %4.1f  %s  %-s\n",
+			stateECV.state, stateECV.votes, endDate, aveBidenPct, bidenTrend, aveTrumpPct, trumpTrend, aveOtherPct, otherTrend, winner)
 
 	}
 	// Totals.

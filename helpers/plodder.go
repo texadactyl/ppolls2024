@@ -118,7 +118,7 @@ func Plodder() {
 			endDateArray = append(endDateArray, query.endDate)
 			bidenPctArray = append(bidenPctArray, query.pctBiden)
 			trumpPctArray = append(trumpPctArray, query.pctTrump)
-			curOtherPct := calcOther(query.pctBiden, query.pctTrump)
+			curOtherPct := CalcOther(query.pctBiden, query.pctTrump)
 			otherPctArray = append(otherPctArray, curOtherPct)
 			if counter >= glob.PollHistoryLimit {
 				break
