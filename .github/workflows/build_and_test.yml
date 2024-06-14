@@ -38,6 +38,7 @@ jobs:
 
     - name: Execute functions
       run: |
+        ./ppolls2024 -h
         ./ppolls2024 -f
         ./ppolls2024 -l
         ./ppolls2024 -r ec
