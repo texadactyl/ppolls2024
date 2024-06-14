@@ -1,0 +1,45 @@
+# This workflow builds ppollls2024.
+# For more implementation information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go.
+
+name: build_and_test
+
+on:
+  push:
+    paths-ignore:
+      - '*.md'
+      - '*.yaml'
+      - '*.txt'
+    branches: [ "main" ]
+  pull_request:
+    paths-ignore:
+      - '*.md'
+    branches: [ "main" ]
+
+jobs:
+
+  build_and_test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@main
+
+    - name: Setup Go
+      uses: actions/setup-go@main
+      with:
+          go-version: '1.21.x'
+          cache: true
+          cache-dependency-path: "**/go.sum"
+          
+    - name: Build Jacotest
+      run: |
+         go build -o . -v ./...
+        ./ppolls2024 -h
+
+    - name: Execute functions
+      run: |
+        ./ppolls2024 -f
+        ./ppolls2024 -l
+        ./ppolls2024 -r ec
+        ./ppolls2024 -p
