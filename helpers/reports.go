@@ -89,12 +89,14 @@ func ReportEC() {
 		aveOtherPct := CalcOther(aveBidenPct, aveTrumpPct)
 		leader := ""
 		var increBiden, increTrump, increTossup int
-		otherFactor := " "
+		otherFactor := ""
 		switch glob.ECVAlgorithm {
 		case 1:
-			leader, increBiden, increTrump, increTossup, otherFactor = ECVAward1(stateECV.votes, aveBidenPct, aveTrumpPct)
+			leader, increBiden, increTrump, increTossup = ECVAward1(stateECV.votes, aveBidenPct, aveTrumpPct)
 		case 2:
-			leader, increBiden, increTrump, increTossup = ECVAward2(stateECV.votes, aveBidenPct, aveTrumpPct)
+			leader, increBiden, increTrump, increTossup, otherFactor = ECVAward2(stateECV.votes, aveBidenPct, aveTrumpPct)
+		case 3:
+			leader, increBiden, increTrump, increTossup = ECVAward3(stateECV.votes, aveBidenPct, aveTrumpPct)
 		default:
 			log.Fatalf("ReportEC: global.ECVAlgoithm %d is not supported\n", glob.ECVAlgorithm)
 		}
