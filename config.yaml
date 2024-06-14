@@ -1,26 +1,29 @@
 PollHistoryLimit:   3
 TossupThreshold:    3.01
-ECVAlgorithm:       2
+ECVAlgorithm:       1
 PlotHeight:         10.0
 PlotWidth:          10.0
 
-# Poll History Limit (integer)
+# PollHistoryLimit: Poll History Limit (integer)
 # Only look back this many polls or less.
 
-# Tossup Threshold (float64)
+# TossupThreshold: Tossup Threshold (float64)
 # If the percentage difference is less than this threshold, its a tossup.
 
-# ECV Algorithm (integer)
+# ECVAlgorithm: Electoral College Vote Allocation Algorithm (integer)
 
     # 1
     #
-    # Tossup status is contingent on the difference, other total, and global.TossupThreshold.
-    # If the percentage difference - the other percentage is under glob.TossupThreshold,
-    # then the outcome is a tossup.
+    # Which candidate has a higher poll percentage?
+	# Is the difference below the tossup threshold?
+	# Might the "Other" percentage make a difference in the future?
+
 
     # 2
     #
-    # The other total is awarded proportionately to both candidates.
-    # If the new totals have a difference below glob.TossupThreshold, then the outcome is a tossup.
+    # Split the "Other" percentage proportionally amongst the candidates. Then,
+    # Which candidate has a higher poll percentage?
+	# Is the difference below the tossup threshold?
 
-# Plot height and width as a float64 quantity of postscript points (dots)
+# Plot height and width (float64)
+# These are the height and width respectively, measured in the quantity of postscript points (dots)

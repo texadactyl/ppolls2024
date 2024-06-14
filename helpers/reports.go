@@ -50,8 +50,8 @@ func ReportEC() {
 	var arrayBidenPct []float64
 	var arrayTrumpPct []float64
 	var arrayOtherPct []float64
-	prtDivider := "--------------------------------------------------------"
-	fmt.Println("\nSt  EV  Last Poll   Biden     Trump      Other    Winner")
+	prtDivider := "-----------------------------------------------------------"
+	fmt.Println("\nSt  EV  Last Poll   Biden     Trump      Other      Leading")
 	fmt.Println(prtDivider)
 	for _, stateECV = range stateECVTable {
 		// For the given state, query from the most recent to the least recent polling.
@@ -87,13 +87,14 @@ func ReportEC() {
 		aveBidenPct /= float64(counter)
 		aveTrumpPct /= float64(counter)
 		aveOtherPct := CalcOther(aveBidenPct, aveTrumpPct)
-		winner := ""
+		leader := ""
 		var increBiden, increTrump, increTossup int
+		otherFactor := " "
 		switch glob.ECVAlgorithm {
 		case 1:
-			winner, increBiden, increTrump, increTossup = ECVAward1(stateECV.votes, aveBidenPct, aveTrumpPct)
+			leader, increBiden, increTrump, increTossup, otherFactor = ECVAward1(stateECV.votes, aveBidenPct, aveTrumpPct)
 		case 2:
-			winner, increBiden, increTrump, increTossup = ECVAward2(stateECV.votes, aveBidenPct, aveTrumpPct)
+			leader, increBiden, increTrump, increTossup = ECVAward2(stateECV.votes, aveBidenPct, aveTrumpPct)
 		default:
 			log.Fatalf("ReportEC: global.ECVAlgoithm %d is not supported\n", glob.ECVAlgorithm)
 		}
@@ -101,7 +102,7 @@ func ReportEC() {
 		totalBidenECV += increBiden
 		totalTrumpECV += increTrump
 		totalTossupECV += increTossup
-		switch winner {
+		switch leader {
 		case "Biden":
 			counterBidenStates++
 			listBidenStates += " " + stateECV.state
@@ -117,8 +118,9 @@ func ReportEC() {
 		bidenTrend := CalcTrend(arrayBidenPct)
 		trumpTrend := CalcTrend(arrayTrumpPct)
 		otherTrend := CalcTrend(arrayOtherPct)
-		fmt.Printf("%-2s  %2d  %-8s  %4.1f  %s  %4.1f  %s  %4.1f  %s  %-s\n",
-			stateECV.state, stateECV.votes, endDate, aveBidenPct, bidenTrend, aveTrumpPct, trumpTrend, aveOtherPct, otherTrend, winner)
+		fmt.Printf("%-2s  %2d  %-8s  %4.1f  %s  %4.1f  %s  %4.1f  %2s%2s  %-s\n",
+			stateECV.state, stateECV.votes, endDate, aveBidenPct, bidenTrend,
+			aveTrumpPct, trumpTrend, aveOtherPct, otherTrend, otherFactor, leader)
 
 	}
 	// Totals.

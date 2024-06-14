@@ -207,32 +207,56 @@ func CalcTrend(array []float64) string {
 	return "--"
 }
 
+// Translate true/false into "-*"/"  ".
+func getFactorString(arg bool) string {
+	if arg {
+		return "**"
+	}
+	return "  "
+}
+
 /*
 ECVAward1 - ECV Award Algorithm 1.
-Tossup status is contingent on the difference, other total, and global.TossupThreshold.
-If the percentage difference - the other percentage is under glob.TossupThreshold,
-then the outcome is a tossup.
+
+	Which candidate has a higher poll percentage?
+	Is the difference below the tossup threshold?
+	Might the "Other" percentage make a difference in the future?
+
+	Calculate the Other percentage = 100 - the sum of the Biden and Trump percentages.
+	If the new Biden and Trump totals have a difference below the TossupThreshold,
+	   then the outcome is a tossup.
+	Otherwise, determine the leader and ECV award.
+	The Other factor is true if and only if the Other percentage exceeds the TossupThreshold
+	that is to say that the Other tallies could swing the voting significantly in the future.
 */
-func ECVAward1(stateVotes int, pctBiden, pctTrump float64) (string, int, int, int) {
+func ECVAward1(stateVotes int, pctBiden, pctTrump float64) (string, int, int, int, string) {
 	glob := global.GetGlobalRef()
+	diff := math.Abs(pctBiden - pctTrump)
 	pctOther := CalcOther(pctBiden, pctTrump)
-	diff := math.Abs(pctBiden + pctTrump)
-	if (diff - pctOther) < glob.TossupThreshold {
-		return "TOSSUP", 0, 0, stateVotes
+	if diff < glob.TossupThreshold {
+		return "TOSSUP", 0, 0, stateVotes, getFactorString(pctOther > diff)
 	} else {
 		if pctBiden > pctTrump {
-			return "Biden", stateVotes, 0, 0
+			return "Biden", stateVotes, 0, 0, getFactorString(pctOther > diff)
 		} else {
-			return "Trump", 0, stateVotes, 0
+			return "Trump", 0, stateVotes, 0, getFactorString(pctOther > diff)
 		}
 	}
 }
 
 /*
 ECVAward2 - ECV Award Algorithm 2.
-The other total is assumed to be decided proportionately by November.
-So, the other total is awarded proportionately to both candidates.
-If the new totals have a difference below glob.TossupThreshold, then the outcome is a tossup.
+
+	Split the "Other" percentage proportionally amongst the candidates. Then,
+	Which candidate has a higher poll percentage?
+	Is the difference below the tossup threshold?
+
+	Calculate the Other percentage = 100 - the sum of the Biden and Trump percentages.
+	The Other percentage is awarded proportionately to both candidates.
+	If the new Biden and Trump totals have a difference below the TossupThreshold,
+	   then the outcome is a tossup.
+	Otherwise, determine the leader and ECV award.
+	The Other factor is always returned false.
 */
 func ECVAward2(stateVotes int, pctBiden, pctTrump float64) (string, int, int, int) {
 	glob := global.GetGlobalRef()
