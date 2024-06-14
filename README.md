@@ -28,11 +28,11 @@ cd ppolls2024
 ppolls2024 -h # Get help.
 ppolls2024 -f # Fetch the latest poll data.
               # The first time poll data is fetched, the following is displayed:
-              # No previous poll data.
+              # Fetch: No previous poll data.
               # If the Internet poll data has changed compared to the local copy, the following is displayed:
-              # Internet poll data has changed.
+              # Fetch: Internet poll data has changed.
               # If there are no changes to the local poll data, the following is displayed:
-              # Internet poll data has not changed. Nothing to do.
+              # Fetch: Internet poll data has not changed. Nothing to do.
 ppolls2024 -l # Load the database with the downloaded data.
 ppolls2024 -r tx # Get detailed report for Texas. The string "TX" is also acceptable.
 ppolls2024 -r ec # Get summary report for all states. The string "EC" is also acceptable.
