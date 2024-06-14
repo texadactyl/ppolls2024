@@ -25,11 +25,11 @@ PlotWidth:          10.0
     # If the difference between candidates is below the tossup threshold,
     #   it's a tossup.
     # Might the "Other" percentage make a difference in the future?
+    # If so, indicate that in the output.
 
 
     # 3
     #
-    # Split the "Other" percentage proportionally amongst the candidates. Then,
     # Which candidate has a higher poll percentage?
     # If the difference between candidates is below the tossup threshold,
     #   it's a tossup.
