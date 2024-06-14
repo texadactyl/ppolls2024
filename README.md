@@ -46,7 +46,9 @@ When ppolls2024 begins execution, its current configuration parameters are displ
 2024/06/14 09:04:41 Loaded 275 records into the database
 ```
 
-The file ```config.yaml``` holds the current values and comments as to their meaning. Be cautious when editing!
+The configuration file ```config.yaml``` holds the current parameter values and comments as to the meaning of each parameter.
+<br>
+Be cautious when editing!
 
 #### Fetch Messages
 
