@@ -25,11 +25,19 @@ go install ./...
 
 ```
 cd ppolls2024
-ppolls2024 -f # Download the latest poll data.
+ppolls2024 -h # Get help.
+ppolls2024 -f # Fetch the latest poll data.
+              # The first time poll data is fetched, the following is displayed:
+              # Fetch: No previous poll data.
+              # If the Internet poll data has changed compared to the local copy, the following is displayed:
+              # Fetch: Internet poll data has changed.
+              # If there are no changes to the local poll data, the following is displayed:
+              # Fetch: Internet poll data has not changed. Nothing to do.
 ppolls2024 -l # Load the database with the downloaded data.
 ppolls2024 -r tx # Get detailed report for Texas. The string "TX" is also acceptable.
 ppolls2024 -r ec # Get summary report for all states. The string "EC" is also acceptable.
-ppolls2024 -p # Get plots.
+#  Upshifting of the -r parameter value is performed automatically.
+ppolls2024 -p # Get plots for all states.
 ```
 
 #### Licensing
