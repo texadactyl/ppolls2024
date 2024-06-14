@@ -12,17 +12,17 @@ import (
 // Show help and then exit to the O/S
 func showHelp() {
 	suffix := filepath.Base(os.Args[0])
-	fmt.Printf("\nUsage:  %s  {-f  -l  -v   -r ID}\n\nwhere\n\n", suffix)
+	fmt.Printf("\nUsage:  %s  {-f  -l  -p  -r ID}\n\nwhere\n\n", suffix)
 	fmt.Printf("\t-f:\tFetch latest poll data from Internet --> directory csv\n")
 	fmt.Printf("\t-l:\tLoad poll data from directory csv\n")
+	fmt.Printf("\t-p:\tGenerate plots\n")
 	fmt.Printf("\t-r ID:\tReport by identifier (ID):\n")
 	fmt.Printf("\t\tSC\tSC = state code (E.g. AL).\n")
-	fmt.Printf("\t\tEC\tElectoral College outcome.\n")
-	fmt.Printf("\t-p:\tGenerate plots\n\n")
-	fmt.Printf("Exit codes:\n")
-	fmt.Printf("\t0\tNormal completion.\n")
+	fmt.Printf("\t\tEC\tElectoral College tallies for all states.\n")
+	fmt.Printf("\nExit codes:\n")
+	fmt.Printf("\t0\tNormal completion or help shown due to command line error.\n")
 	fmt.Printf("\t1\tSomething went wrong during execution.\n\n")
-	os.Exit(1)
+	os.Exit(0)
 }
 
 // Walk the base JMOD file and count the bytes for all classes/*.class entries
