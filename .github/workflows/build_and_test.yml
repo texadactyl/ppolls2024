@@ -32,12 +32,11 @@ jobs:
           cache: true
           cache-dependency-path: "**/go.sum"
 
-    - name: Build Jacotest
+    - name: Build ppolls2024
       run: |
          go build -o . -v ./...
-         ./ppolls2024 -h
 
-    - name: Execute functions
+    - name: Run ppolls2024 functions
       run: |
         ./ppolls2024 -f
         ./ppolls2024 -l
