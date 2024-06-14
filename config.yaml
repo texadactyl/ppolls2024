@@ -4,23 +4,29 @@ ECVAlgorithm:       2
 PlotHeight:         10.0
 PlotWidth:          10.0
 
-# Poll History Limit (integer)
+# PollHistoryLimit: Poll History Limit (integer)
 # Only look back this many polls or less.
 
-# Tossup Threshold (float64)
+# TossupThreshold: Tossup Threshold (float64)
 # If the percentage difference is less than this threshold, its a tossup.
 
-# ECV Algorithm (integer)
+# ECVAlgorithm: Electoral College Vote Allocation Algorithm (integer)
 
     # 1
     #
-    # Tossup status is contingent on the difference, other total, and global.TossupThreshold.
-    # If the percentage difference - the other percentage is under glob.TossupThreshold,
-    # then the outcome is a tossup.
+    # Calculate the Other percentage = 100 - the sum of the Biden and Trump percentages.
+    # Calculate DIFF = the absolute value of the difference between Biden and Trump percentages.
+    # If DIFF minus the Other percentage is under the TossupThreshold, 
+    #    then the outcome is a tossup.
+    # Otherwise, determine the winner and ECV award.
 
     # 2
     #
-    # The other total is awarded proportionately to both candidates.
-    # If the new totals have a difference below glob.TossupThreshold, then the outcome is a tossup.
+    # Calculate the Other percentage = 100 - the sum of the Biden and Trump percentages.
+    # The Other percentage is awarded proportionately to both candidates.
+    # If the new Biden and Trump totals have a difference below the TossupThreshold, 
+    #    then the outcome is a tossup.
+    # Otherwise, determine the winner and ECV award.
 
-# Plot height and width as a float64 quantity of postscript points (dots)
+# Plot height and width (float64)
+# These are the height and width respectively, measured in the quantity of postscript points (dots)
