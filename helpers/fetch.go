@@ -36,26 +36,26 @@ func Fetch(dirCsv, fileName, url, dirTemp string) {
 	// Get the data.
 	resp, err := http.Get(url)
 	if err != nil {
-		log.Fatalf("*** ERROR, http.Get(%s) failed, reason: %s\n", url, err.Error())
+		log.Fatalf("Fetch: http.Get(%s) failed, reason: %s\n", url, err.Error())
 	}
 	defer resp.Body.Close()
 
 	// Create the temp CSV file.
 	outf, err := os.Create(pathTempCSV)
 	if err != nil {
-		log.Fatalf("*** ERROR, os.Create(%s) failed, reason: %s\n", pathTempCSV, err.Error())
+		log.Fatalf("Fetch: os.Create(%s) failed, reason: %s\n", pathTempCSV, err.Error())
 	}
 
 	// Write the response body to the temp CSV file.
 	_, err = io.Copy(outf, resp.Body)
 	if err != nil {
-		log.Fatalf("*** ERROR, io.Copy(%s) failed, reason: %s\n", pathTempCSV, err.Error())
+		log.Fatalf("Fetch: io.Copy(%s) failed, reason: %s\n", pathTempCSV, err.Error())
 	}
 
 	// Close the temp CSV file.
 	err = outf.Close()
 	if err != nil {
-		log.Fatalf("*** ERROR, os.Close(%s) failed, reason: %s\n", pathTempCSV, err.Error())
+		log.Fatalf("Fetch: os.Close(%s) failed, reason: %s\n", pathTempCSV, err.Error())
 	}
 
 	// Compute checksum for current CSV file.
@@ -64,7 +64,7 @@ func Fetch(dirCsv, fileName, url, dirTemp string) {
 		// An error occurred.
 		// Assume that there is no current CSV file.
 		// Copy the temp CSV file to the current CSV file.
-		log.Println("Fetch: No previous CSV file.")
+		log.Println("Fetch: No previous poll data.")
 		moveTempCSVToCurrentCSV(pathTempCSV, pathCurrentCSV)
 		log.Println("Fetch: End")
 		return
@@ -80,13 +80,13 @@ func Fetch(dirCsv, fileName, url, dirTemp string) {
 
 	// Any changes from last time?
 	if cksumCurrent != cksumTemp {
-		log.Println("Fetch: Internet CSV file has changed.")
+		log.Println("Fetch: Internet poll data has changed.")
 		moveTempCSVToCurrentCSV(pathTempCSV, pathCurrentCSV)
 		log.Println("Fetch: End")
 		return
 	}
 
 	// ByeBye.
-	log.Println("Fetch: No changes to the CSV file. Nothing to do.")
+	log.Println("Fetch: Internet poll data has not changed. Nothing to do.")
 	log.Println("Fetch: End")
 }
