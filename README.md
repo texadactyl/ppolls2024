@@ -30,9 +30,23 @@ ppolls2024 -f # Fetch the latest poll data.
 ppolls2024 -l # Load the database with the downloaded data.
 ppolls2024 -r tx # Get detailed report for Texas. The string "TX" is also acceptable.
 ppolls2024 -r ec # Get summary report for all states. The string "EC" is also acceptable.
-#  Upshifting of the -r parameter value is performed automatically.
+                 # Note that upshifting of the -r parameter value is performed automatically.
 ppolls2024 -p # Get plots for all states.
 ```
+
+#### Configuration
+
+When ppolls2024 begins execution, its current configuration parameters are displayed. For example the following is a sample display of console messages for ```ppolls2024 -l```:
+```
+2024/06/14 09:04:40 GetConfig: PollHistoryLimit: 3
+2024/06/14 09:04:40 GetConfig: TossupThreshold: 3.010000
+2024/06/14 09:04:40 GetConfig: ECVAlgorithm: 2
+2024/06/14 09:04:40 GetConfig: PlotWidth: 10.000000
+2024/06/14 09:04:40 GetConfig: PlotHeight: 10.000000
+2024/06/14 09:04:41 Loaded 275 records into the database
+```
+
+The file ```config.yaml``` holds the current values and comments as to their meaning. Be cautious when editing!
 
 #### Fetch Messages
 
