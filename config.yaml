@@ -1,6 +1,6 @@
 PollHistoryLimit:   3
 TossupThreshold:    3.01
-ECVAlgorithm:       2
+ECVAlgorithm:       1
 PlotHeight:         10.0
 PlotWidth:          10.0
 
@@ -14,19 +14,16 @@ PlotWidth:          10.0
 
     # 1
     #
-    # Calculate the Other percentage = 100 - the sum of the Biden and Trump percentages.
-    # Calculate DIFF = the absolute value of the difference between Biden and Trump percentages.
-    # If DIFF minus the Other percentage is under the TossupThreshold, 
-    #    then the outcome is a tossup.
-    # Otherwise, determine the winner and ECV award.
+    # Which candidate has a higher poll percentage?
+	# Is the difference below the tossup threshold?
+	# Might the "Other" percentage make a difference in the future?
+
 
     # 2
     #
-    # Calculate the Other percentage = 100 - the sum of the Biden and Trump percentages.
-    # The Other percentage is awarded proportionately to both candidates.
-    # If the new Biden and Trump totals have a difference below the TossupThreshold, 
-    #    then the outcome is a tossup.
-    # Otherwise, determine the winner and ECV award.
+    # Split the "Other" percentage proportionally amongst the candidates. Then,
+    # Which candidate has a higher poll percentage?
+	# Is the difference below the tossup threshold?
 
 # Plot height and width (float64)
 # These are the height and width respectively, measured in the quantity of postscript points (dots)
