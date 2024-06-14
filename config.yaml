@@ -15,15 +15,15 @@ PlotWidth:          10.0
     # 1
     #
     # Which candidate has a higher poll percentage?
-	# Is the difference below the tossup threshold?
-	# Might the "Other" percentage make a difference in the future?
+    # Is the difference below the tossup threshold?
+    # Might the "Other" percentage make a difference in the future?
 
 
     # 2
     #
     # Split the "Other" percentage proportionally amongst the candidates. Then,
     # Which candidate has a higher poll percentage?
-	# Is the difference below the tossup threshold?
+    # Is the difference below the tossup threshold?
 
 # Plot height and width (float64)
 # These are the height and width respectively, measured in the quantity of postscript points (dots)
