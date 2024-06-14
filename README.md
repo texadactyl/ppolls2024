@@ -27,18 +27,42 @@ go install ./...
 cd ppolls2024
 ppolls2024 -h # Get help.
 ppolls2024 -f # Fetch the latest poll data.
-              # The first time poll data is fetched, the following is displayed:
-              # Fetch: No previous poll data.
-              # If the Internet poll data has changed compared to the local copy, the following is displayed:
-              # Fetch: Internet poll data has changed.
-              # If there are no changes to the local poll data, the following is displayed:
-              # Fetch: Internet poll data has not changed. Nothing to do.
 ppolls2024 -l # Load the database with the downloaded data.
 ppolls2024 -r tx # Get detailed report for Texas. The string "TX" is also acceptable.
 ppolls2024 -r ec # Get summary report for all states. The string "EC" is also acceptable.
-#  Upshifting of the -r parameter value is performed automatically.
+                 # Note that upshifting of the -r parameter value is performed automatically.
 ppolls2024 -p # Get plots for all states.
 ```
+
+#### Configuration
+
+When ppolls2024 begins execution, its current configuration parameters are displayed. For example the following is a sample display of console messages for ```ppolls2024 -l```:
+```
+2024/06/14 09:04:40 GetConfig: PollHistoryLimit: 3
+2024/06/14 09:04:40 GetConfig: TossupThreshold: 3.010000
+2024/06/14 09:04:40 GetConfig: ECVAlgorithm: 2
+2024/06/14 09:04:40 GetConfig: PlotWidth: 10.000000
+2024/06/14 09:04:40 GetConfig: PlotHeight: 10.000000
+2024/06/14 09:04:41 Loaded 275 records into the database
+```
+
+The configuration file ```config.yaml``` holds the current parameter values and comments as to the meaning of each parameter.
+<br>
+Be cautious when editing!
+
+#### Fetch Messages
+
+The first time poll data is fetched from the Internet, the following is displayed:
+<br>
+```Fetch: No previous poll data.```
+
+If the Internet poll data has changed with respect to the local copy, the following is displayed:
+<br>
+```Fetch: Internet poll data has changed.```
+
+If the the Internet poll data and the local poll data are still the same, the following is displayed:
+<br>
+```Fetch: Internet poll data has not changed. Nothing to do.```
 
 #### Licensing
 
