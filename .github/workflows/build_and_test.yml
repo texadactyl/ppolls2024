@@ -35,7 +35,6 @@ jobs:
     - name: Build Jacotest
       run: |
          go build -o . -v ./...
-        ./ppolls2024 -h
 
     - name: Execute functions
       run: |
