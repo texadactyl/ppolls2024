@@ -218,24 +218,20 @@ func getFactorString(arg bool) string {
 /*
 ECVAward1 - ECV Award Algorithm 1.
 
-	Split the "Other" percentage proportionally amongst the candidates. Then,
-	Which candidate has a higher poll percentage?
-	Is the difference below the tossup threshold?
+	Calculate the Other percentage = 100 - the sum of the candidate percentages.
+	Split the "Other" percentage proportionally amongst the candidates.
+	Calculate the difference = absolute value of the difference between the candidates.
 
-	Calculate the Other percentage = 100 - the sum of the Biden and Trump percentages.
-	The Other percentage is awarded proportionately to both candidates.
-	If the new Biden and Trump totals have a difference below the TossupThreshold,
-	   then the outcome is a tossup.
-	Otherwise, determine the leader and ECV award.
-	The Other factor is always returned false.
+	If the difference is below the tossup threshold, then this state is a tossup.
 */
 func ECVAward1(stateVotes int, pctBiden, pctTrump float64) (string, int, int, int) {
 	glob := global.GetGlobalRef()
 	pctOther := CalcOther(pctBiden, pctTrump)
+
 	pctBiden += pctOther * pctBiden / 100.0
 	pctTrump += pctOther * pctTrump / 100.0
-
 	diff := math.Abs(pctBiden - pctTrump)
+
 	if diff < glob.TossupThreshold {
 		return "TOSSUP", 0, 0, stateVotes
 	} else {
@@ -250,18 +246,11 @@ func ECVAward1(stateVotes int, pctBiden, pctTrump float64) (string, int, int, in
 /*
 ECVAward2 - ECV Award Algorithm 2.
 
-	Which candidate has a higher poll percentage?
-	Is the difference below the tossup threshold?
+	Calculate the Other percentage = 100 - the sum of the candidate percentages.
+	Calculate the difference = absolute value of the difference between the candidates.
 
-	Might the "Other" percentage make a difference in the future?
-	If so, provide a "**" flag.
-
-	Calculate the Other percentage = 100 - the sum of the Biden and Trump percentages.
-	If the new Biden and Trump totals have a difference below the TossupThreshold,
-	   then the outcome is a tossup.
-	Otherwise, determine the leader and ECV award.
-	The Other factor is true if and only if the Other percentage exceeds the TossupThreshold
-	that is to say that the Other tallies could swing the voting significantly in the future.
+	If the "Other" percentage exceeds the difference, then flag this state on return.
+	If the difference is below the tossup threshold, then this state is a tossup.
 */
 func ECVAward2(stateVotes int, pctBiden, pctTrump float64) (string, int, int, int, string) {
 	glob := global.GetGlobalRef()
@@ -279,31 +268,24 @@ func ECVAward2(stateVotes int, pctBiden, pctTrump float64) (string, int, int, in
 /*
 ECVAward3 - ECV Award Algorithm 3.
 
-	Which candidate has a higher poll percentage?
-	Is the difference below the tossup threshold?
+	Calculate the Other percentage = 100 - the sum of the candidate percentages.
+	Calculate the difference = absolute value of the difference between the candidates.
 
-	Might the "Other" percentage make a difference in the future?
-	If so, then this state is a tossup.
-
-	Calculate the Other percentage = 100 - the sum of the Biden and Trump percentages.
-	If the new Biden and Trump totals have a difference below the TossupThreshold,
-	   then the outcome is a tossup.
-	Otherwise, determine the leader and ECV award.
-	The Other factor is true if and only if the Other percentage exceeds the TossupThreshold
-	that is to say that the Other tallies could swing the voting significantly in the future.
+	If the "Other" percentage exceeds the difference, then this state is a tossup.
+	If the difference is below the tossup threshold, then this state is a tossup.
 */
-func ECVAward3(stateVotes int, pctBiden, pctTrump float64) (string, int, int, int) {
+func ECVAward3(stateVotes int, pctBiden, pctTrump float64) (string, int, int, int, string) {
 	glob := global.GetGlobalRef()
 	diff := math.Abs(pctBiden - pctTrump)
 	pctOther := CalcOther(pctBiden, pctTrump)
-	if diff < glob.TossupThreshold {
-		return "TOSSUP", 0, 0, stateVotes
-	}
 	if pctOther > diff {
-		return "TOSSUP", 0, 0, stateVotes
+		return "TOSSUP", 0, 0, stateVotes, getFactorString(true)
+	}
+	if diff < glob.TossupThreshold {
+		return "TOSSUP", 0, 0, stateVotes, " "
 	}
 	if pctBiden > pctTrump {
-		return "Biden", stateVotes, 0, 0
+		return "Biden", stateVotes, 0, 0, " "
 	}
-	return "Trump", 0, stateVotes, 0
+	return "Trump", 0, stateVotes, 0, " "
 }

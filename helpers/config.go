@@ -19,6 +19,7 @@ type paramsStruct struct {
 }
 
 func GetConfig() {
+	
 	var params paramsStruct
 	glob := global.GetGlobalRef()
 	bytes, err := os.ReadFile(glob.CfgFile)
@@ -29,18 +30,6 @@ func GetConfig() {
 	if err != nil {
 		log.Fatalf("yaml.Unmarshal from %s failed, reason: %s\n", glob.CfgFile, err.Error())
 	}
-
-	glob.PollHistoryLimit, err = strconv.Atoi(params.PollHistoryLimit)
-	if err != nil {
-		log.Fatalf("strconv.Atoi(PollHistoryLimit) from %s failed, reason: %s\n", glob.CfgFile, err.Error())
-	}
-	log.Printf("GetConfig: PollHistoryLimit: %d", glob.PollHistoryLimit)
-
-	glob.TossupThreshold, err = strconv.ParseFloat(params.TossupThreshold, 64)
-	if err != nil {
-		log.Fatalf("GetConfig: strconv.ParseFloat(TossupThreshold) from %s failed, reason: %s\n", glob.CfgFile, err.Error())
-	}
-	log.Printf("GetConfig: TossupThreshold: %f", glob.TossupThreshold)
 
 	glob.ECVAlgorithm, err = strconv.Atoi(params.ECVAlgorithm)
 	if err != nil {
@@ -60,4 +49,17 @@ func GetConfig() {
 		log.Fatalf("GetConfig: strconv.ParseFloat(PlotHeight) from %s failed, reason: %s\n", glob.CfgFile, err.Error())
 	}
 	log.Printf("GetConfig: PlotHeight: %f", glob.PlotHeight)
+
+	glob.PollHistoryLimit, err = strconv.Atoi(params.PollHistoryLimit)
+	if err != nil {
+		log.Fatalf("strconv.Atoi(PollHistoryLimit) from %s failed, reason: %s\n", glob.CfgFile, err.Error())
+	}
+	log.Printf("GetConfig: PollHistoryLimit: %d", glob.PollHistoryLimit)
+
+	glob.TossupThreshold, err = strconv.ParseFloat(params.TossupThreshold, 64)
+	if err != nil {
+		log.Fatalf("GetConfig: strconv.ParseFloat(TossupThreshold) from %s failed, reason: %s\n", glob.CfgFile, err.Error())
+	}
+	log.Printf("GetConfig: TossupThreshold: %f", glob.TossupThreshold)
+
 }

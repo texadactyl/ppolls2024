@@ -1,41 +1,39 @@
-PollHistoryLimit:   3
-TossupThreshold:    3.01
-ECVAlgorithm:       2
+ECVAlgorithm:       3
 PlotHeight:         10.0
 PlotWidth:          10.0
+PollHistoryLimit:   3
+TossupThreshold:    3.01
+
+# ECVAlgorithm: Electoral College Vote Allocation Algorithm (integer)
+
+    # Other percentage = 100% - (sum percentages of the candidates).
+    # Difference = absolute value of the difference between candidates.
+
+    # 1 - Split the Other Proportionately.
+    #
+    # Split the "Other" percentage proportionally amongst the candidates.
+    # If the difference between candidates is below the tossup threshold, it's a tossup.
+
+    # 2 - Compare the difference to the tossup threshold.
+    #
+    # If the difference between candidates is below the tossup threshold, it's a tossup.
+    # If the "Other" percentage exceeds the difference, indicate that in the other factor output.
+
+
+    # 3 - Like #2 except "other" plays a roll in determining tossup status.
+    #
+    # If the other percentage exceeds the difference between Biden and Trump,
+    #    * Indicate that in the other factor output.
+    #    * It's a tossup.
+    # If the difference between candidates is below the tossup threshold,
+    #   it's a tossup.
+
+# Plot height and width (float64)
+# These are the height and width respectively, measured in the quantity of postscript points (dots)
 
 # PollHistoryLimit: Poll History Limit (integer)
 # Only look back this many polls or less.
 
 # TossupThreshold: Tossup Threshold (float64)
 # If the percentage difference is less than this threshold, its a tossup.
-
-# ECVAlgorithm: Electoral College Vote Allocation Algorithm (integer)
-
-    # 1
-    #
-    # Split the "Other" percentage proportionally amongst the candidates. Then,
-    # Which candidate has a higher poll percentage?
-    # If the difference between candidates is below the tossup threshold,
-    #   it's a tossup.
-
-    # 2
-    #
-    # Which candidate has a higher poll percentage?
-    # If the difference between candidates is below the tossup threshold,
-    #   it's a tossup.
-    # Might the "Other" percentage make a difference in the future?
-    # If so, indicate that in the output.
-
-
-    # 3
-    #
-    # Which candidate has a higher poll percentage?
-    # If the difference between candidates is below the tossup threshold,
-    #   it's a tossup.
-    # If the "Other" percentage would make a difference in the future,
-    #   it's a tossup.
-
-# Plot height and width (float64)
-# These are the height and width respectively, measured in the quantity of postscript points (dots)
 

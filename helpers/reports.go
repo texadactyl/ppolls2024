@@ -96,7 +96,7 @@ func ReportEC() {
 		case 2:
 			leader, increBiden, increTrump, increTossup, otherFactor = ECVAward2(stateECV.votes, aveBidenPct, aveTrumpPct)
 		case 3:
-			leader, increBiden, increTrump, increTossup = ECVAward3(stateECV.votes, aveBidenPct, aveTrumpPct)
+			leader, increBiden, increTrump, increTossup, otherFactor = ECVAward3(stateECV.votes, aveBidenPct, aveTrumpPct)
 		default:
 			log.Fatalf("ReportEC: global.ECVAlgoithm %d is not supported\n", glob.ECVAlgorithm)
 		}
@@ -127,6 +127,9 @@ func ReportEC() {
 	}
 	// Totals.
 	fmt.Println(prtDivider)
+	if glob.ECVAlgorithm != 1 {
+		fmt.Println("** The Other percentage exceeds the difference between Biden and Trump.")
+	}
 	fmt.Printf("Biden  EV: %3d, states: (%2d)%s\n", totalBidenECV, counterBidenStates, listBidenStates)
 	fmt.Printf("Trump  EV: %3d, states: (%2d)%s\n", totalTrumpECV, counterTrumpStates, listTrumpStates)
 	fmt.Printf("Tossup EV: %3d, states: (%2d)%s\n", totalTossupECV, counterTossupStates, listTossupStates)
