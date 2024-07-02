@@ -289,3 +289,15 @@ func ECVAward3(stateVotes int, pctBiden, pctTrump float64) (string, int, int, in
 	}
 	return "Trump", 0, stateVotes, 0, " "
 }
+
+// searchSlice looks for a target string in an array of strings.
+// It returns true if the target string is found,
+// Otherwise, it returns false.
+func searchSlice(slice []string, target string) bool {
+	for _, str := range slice {
+		if str == target {
+			return true
+		}
+	}
+	return false
+}

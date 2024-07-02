@@ -6,6 +6,7 @@ import (
 	"os"
 	"ppolls2024/global"
 	"strconv"
+	"strings"
 )
 
 type paramsStruct struct {
@@ -14,12 +15,13 @@ type paramsStruct struct {
 	PollHistoryLimit string `yaml:"PollHistoryLimit"`
 	TossupThreshold  string `yaml:"TossupThreshold"`
 	ECVAlgorithm     string `yaml:"ECVAlgorithm"`
+	Battleground     string `yaml:"Battleground"`
 	PlotWidth        string `yaml:"PlotWidth"`
 	PlotHeight       string `yaml:"PlotHeight"`
 }
 
 func GetConfig() {
-	
+
 	var params paramsStruct
 	glob := global.GetGlobalRef()
 	bytes, err := os.ReadFile(glob.CfgFile)
@@ -37,6 +39,8 @@ func GetConfig() {
 		log.Fatalf("strconv.Atoi(ECVAlgorithm) from %s failed, reason: %s\n", glob.CfgFile, err.Error())
 	}
 	log.Printf("GetConfig: ECVAlgorithm: %d", glob.ECVAlgorithm)
+
+	glob.Battleground = strings.Split(params.Battleground, ",")
 
 	glob.PlotWidth, err = strconv.ParseFloat(params.PlotWidth, 64)
 	if err != nil {

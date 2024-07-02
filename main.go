@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"ppolls2024/global"
@@ -19,6 +20,7 @@ func showHelp() {
 	fmt.Printf("\t-r ID:\tReport by identifier (ID):\n")
 	fmt.Printf("\t\tSC\tSC = state code (E.g. AL).\n")
 	fmt.Printf("\t\tEC\tElectoral College tallies for all states.\n")
+	fmt.Printf("\t-b:\tProcess only battleground states in -r ec\n")
 	fmt.Printf("\nExit codes:\n")
 	fmt.Printf("\t0\tNormal completion or help shown due to command line error.\n")
 	fmt.Printf("\t1\tSomething went wrong during execution.\n\n")
@@ -56,6 +58,8 @@ func main() {
 			ii++
 			rpt = strings.ToUpper(params[ii])
 			glob.FlagReport = true
+		case "-b":
+			glob.FlagBattleground = true
 		default:
 			fmt.Printf("*** The specified parameter (%s) is not supported!\n", params[ii])
 			showHelp()
@@ -67,6 +71,11 @@ func main() {
 	helpers.MakeDir(glob.DirDatabase)
 	helpers.MakeDir(glob.DirPlots)
 	helpers.MakeDir(glob.DirTemp)
+
+	// Validate the use of -b.
+	if glob.FlagBattleground && !glob.FlagReport {
+		log.Println("Warning: No reports requested. The battleground flag (-b) is ignored")
+	}
 
 	// Fetch new data?
 	if glob.FlagFetch {

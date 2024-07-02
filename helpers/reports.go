@@ -54,6 +54,11 @@ func ReportEC() {
 	fmt.Println("\nSt  EV  Last Poll   Biden     Trump      Other      Leading")
 	fmt.Println(prtDivider)
 	for _, stateECV = range stateECVTable {
+		if glob.FlagBattleground {
+			if !searchSlice(glob.Battleground, stateECV.state) {
+				continue
+			}
+		}
 		// For the given state, query from the most recent to the least recent polling.
 		sqlText := fmt.Sprintf("SELECT end_date, pct_biden, pct_trump FROM history WHERE state = '%s' ORDER BY end_date DESC",
 			stateECV.state)

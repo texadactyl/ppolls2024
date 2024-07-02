@@ -1,8 +1,9 @@
-ECVAlgorithm:       3
+ECVAlgorithm:       2
 PlotHeight:         10.0
 PlotWidth:          10.0
 PollHistoryLimit:   3
 TossupThreshold:    3.01
+Battleground:       AZ,GA,MI,NH,NV,PA,VA,WI
 
 # ECVAlgorithm: Electoral College Vote Allocation Algorithm (integer)
 
