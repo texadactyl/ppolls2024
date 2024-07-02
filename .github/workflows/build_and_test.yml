@@ -31,7 +31,7 @@ jobs:
           cache: true
           cache-dependency-path: "**/go.sum"
 
-    - name: Build Jacotest
+    - name: Build ppolls2024
       run: |
          go build -o . -v ./...
 
@@ -41,5 +41,6 @@ jobs:
         ./ppolls2024 -f
         ./ppolls2024 -l
         ./ppolls2024 -r ec
+        ./ppolls2024 -r ec -b
         ./ppolls2024 -p
 
