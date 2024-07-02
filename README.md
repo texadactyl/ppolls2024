@@ -7,7 +7,7 @@ This project analyzes the 2024 USA Presididential Election polling data, availab
 
 The ```ppolls2024``` executable will create directories and files as needed on-the-fly. Make sure that the standard Go $HOME/go/bin directory is in the $PATH. Similar advice for Windows users (you would know better than me).
 
-Free advice regarding poll data: Do not bother looking at **national** poll data. It would make more sense if the national popular vote determined the leader; see https://www.brennancenter.org/our-work/research-reports/national-popular-vote-explained. But, that is not the way Presidential elections currently work in the USA. I shall say no more on this subject!
+Free advice regarding poll data: Do not bother looking at **national** poll data. It would make more sense if the national popular vote determined the leader; see https://www.brennancenter.org/our-work/research-reports/national-popular-vote-explained. But, that is not the way the US Presidential elections currently work. I shall say no more on this subject!
 
 #### Installation
 
