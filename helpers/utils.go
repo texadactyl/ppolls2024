@@ -207,7 +207,7 @@ func CalcTrend(array []float64) string {
 	return "--"
 }
 
-// Translate true/false into "-*"/"  ".
+// Translate true | false into "**" | "  ".
 func getFactorString(arg bool) string {
 	if arg {
 		return "**"
