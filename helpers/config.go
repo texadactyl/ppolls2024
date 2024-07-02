@@ -41,6 +41,7 @@ func GetConfig() {
 	log.Printf("GetConfig: ECVAlgorithm: %d", glob.ECVAlgorithm)
 
 	glob.Battleground = strings.Split(params.Battleground, ",")
+	log.Printf("GetConfig: Battleground states: %s", params.Battleground)
 
 	glob.PlotWidth, err = strconv.ParseFloat(params.PlotWidth, 64)
 	if err != nil {

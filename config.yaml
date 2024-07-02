@@ -1,11 +1,11 @@
 ECVAlgorithm:       2
+Battleground:       AZ,GA,MI,NH,NV,PA,VA,WI
 PlotHeight:         10.0
 PlotWidth:          10.0
 PollHistoryLimit:   3
 TossupThreshold:    3.01
-Battleground:       AZ,GA,MI,NH,NV,PA,VA,WI
 
-# ECVAlgorithm: Electoral College Vote Allocation Algorithm (integer)
+# ECVAlgorithm: Electoral College Vote Allocation Algorithm (int)
 
     # Other percentage = 100% - (sum percentages of the candidates).
     # Difference = absolute value of the difference between candidates.
@@ -29,10 +29,12 @@ Battleground:       AZ,GA,MI,NH,NV,PA,VA,WI
     # If the difference between candidates is below the tossup threshold,
     #   it's a tossup.
 
-# Plot height and width (float64)
+# Battleground ([]string): This is the list of battleground states that are in effect with specifying -b on the command line.
+
+# PlotHeight, PlotWidth: Plot height and width (float64)
 # These are the height and width respectively, measured in the quantity of postscript points (dots)
 
-# PollHistoryLimit: Poll History Limit (integer)
+# PollHistoryLimit: Poll History Limit (int)
 # Only look back this many polls or less.
 
 # TossupThreshold: Tossup Threshold (float64)
