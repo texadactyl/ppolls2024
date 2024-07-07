@@ -26,7 +26,7 @@ func moveTempCSVToCurrentCSV(pathTemp, pathCurrent string) {
 	}
 }
 
-func Fetch(dirCsv, fileName, url, dirTemp string) {
+func Fetch(dirCsv, fileName, url, dirTemp string) bool {
 
 	// Form the full path of the CSV file in the final directory and the temporary directory.
 	pathCurrentCSV := filepath.Join(dirCsv, fileName)
@@ -67,7 +67,7 @@ func Fetch(dirCsv, fileName, url, dirTemp string) {
 		log.Println("Fetch: No previous poll data.")
 		moveTempCSVToCurrentCSV(pathTempCSV, pathCurrentCSV)
 		log.Println("Fetch: End")
-		return
+		return true
 	}
 	cksumCurrent := crc32.ChecksumIEEE(fileBytes)
 
@@ -83,10 +83,11 @@ func Fetch(dirCsv, fileName, url, dirTemp string) {
 		log.Println("Fetch: Internet poll data has changed.")
 		moveTempCSVToCurrentCSV(pathTempCSV, pathCurrentCSV)
 		log.Println("Fetch: End")
-		return
+		return true
 	}
 
 	// ByeBye.
 	log.Println("Fetch: Internet poll data has not changed. Nothing to do.")
 	log.Println("Fetch: End")
+	return false
 }

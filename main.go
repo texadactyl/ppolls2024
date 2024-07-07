@@ -79,7 +79,9 @@ func main() {
 
 	// Fetch new data?
 	if glob.FlagFetch {
-		helpers.Fetch(glob.DirCsv, glob.LocalCsvFile, glob.InternetCsvFile, glob.DirTemp)
+		if !helpers.Fetch(glob.DirCsv, glob.LocalCsvFile, glob.InternetCsvFile, glob.DirTemp) {
+			os.Exit(1)
+		}
 	}
 
 	// Load newly-fetched data into the database?
