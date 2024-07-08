@@ -95,6 +95,7 @@ func main() {
 	if glob.FlagPlot {
 		helpers.DBOpen(glob.DbDriver, glob.DirDatabase, glob.DbFile)
 		helpers.Plodder()
+		helpers.DBClose()
 	}
 
 	// Run a report?
@@ -105,6 +106,7 @@ func main() {
 		} else {
 			helpers.ReportSC(rpt)
 		}
+		helpers.DBClose()
 	}
 
 }
