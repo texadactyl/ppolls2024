@@ -91,6 +91,12 @@ func main() {
 		helpers.DBClose()
 	}
 
+	// Generate plots?
+	if glob.FlagPlot {
+		helpers.DBOpen(glob.DbDriver, glob.DirDatabase, glob.DbFile)
+		helpers.Plodder()
+	}
+
 	// Run a report?
 	if glob.FlagReport {
 		helpers.DBOpen(glob.DbDriver, glob.DirDatabase, glob.DbFile)
@@ -99,12 +105,6 @@ func main() {
 		} else {
 			helpers.ReportSC(rpt)
 		}
-	}
-
-	// Generate plots?
-	if glob.FlagPlot {
-		helpers.DBOpen(glob.DbDriver, glob.DirDatabase, glob.DbFile)
-		helpers.Plodder()
 	}
 
 }
