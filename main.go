@@ -56,6 +56,10 @@ func main() {
 			glob.FlagPlot = true
 		case "-r":
 			ii++
+			if ii >= len(params) {
+				fmt.Println("*** The -r parameter lacks a value!")
+				showHelp()
+			}
 			rpt = strings.ToUpper(params[ii])
 			glob.FlagReport = true
 		case "-b":
