@@ -1,13 +1,7 @@
-set -e
-
 ppolls2024 -f
-if [ $? -ne 0 ]; then
-    exit 1
+if [ $? -eq 0 ]; then
+    ppolls2024 -l
 fi
 
-ppolls2024 -l
-
-ppolls2024 -p
-
-ppolls2024 -r ec
+ppolls2024 -p -r ec
 
