@@ -1,5 +1,6 @@
 ECVAlgorithm:       2
-Battleground:       AZ,GA,MI,NH,NV,PA,VA,WI
+Battleground:       AZ,GA,MI,MN,NH,NV,PA,VA,WI
+DateThreshold:      2024-06-27
 PlotHeight:         10.0
 PlotWidth:          10.0
 PollHistoryLimit:   3
@@ -30,6 +31,8 @@ TossupThreshold:    3.01
     #   it's a tossup.
 
 # Battleground ([]string): This is the list of battleground states that are in effect with specifying -b on the command line.
+
+# DateThreshold: Eliminate any polls before this date in the reports and plots.
 
 # PlotHeight, PlotWidth: Plot height and width (float64)
 # These are the height and width respectively, measured in the quantity of postscript points (dots)

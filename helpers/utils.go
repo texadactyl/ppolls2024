@@ -27,6 +27,15 @@ func GetUtcTime() string {
 	return now.Format("15:04:05.000")
 }
 
+// Date (YYYY-MM-DD) to Time.
+func YYYY_MM_DDtoTime(dateString string) (time.Time, error) {
+	tm, err := time.Parse("2006-01-02", dateString)
+	if err != nil {
+		return global.DummyTime, err
+	}
+	return tm, err
+}
+
 // WriteOutputText - Write a text line to the given output file handle.
 func WriteOutputText(outHandle *os.File, textLine string) {
 

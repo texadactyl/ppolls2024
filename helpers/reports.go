@@ -15,23 +15,36 @@ func ReportSC(state string) {
 	sqlText := fmt.Sprintf("SELECT state, end_date, pct_biden, pct_trump, pollster FROM history WHERE state = '%s' ORDER BY end_date DESC", state)
 
 	// Get all the selected history table rows.
-	counter := 0
+	counterScan := 0
+	counterPrint := 0
+
 	log.Printf("State report: %s\n", state)
 	rows := sqlQuery(sqlText)
 
 	// For each row, process it...
 	fmt.Printf("%-8s    %-4s %-4s %-4s %-s\n", "EndPoll", "Biden", "Trump", "Other", "Pollster")
 	for rows.Next() {
-		counter += 1
+		counterScan += 1
 		err := rows.Scan(&query.state, &query.endDate, &query.pctBiden, &query.pctTrump, &query.pollster)
 		if err != nil {
-			log.Fatalf("ReportSC: rows.Scan failed, row count: %d, reason: %s\n", counter, err.Error())
+			log.Fatalf("ReportSC: rows.Scan failed, row count: %d, reason: %s\n", counterScan, err.Error())
 		}
+		tm, err := YYYY_MM_DDtoTime(query.endDate)
+		if err != nil {
+			log.Fatalf("ReportEC: Cannot parse start date: %s, reason: %s\n\n", query.endDate, err.Error())
+		}
+		if tm.Before(glob.DateThreshold) {
+			continue
+		}
+		counterPrint++
 		other := CalcOther(query.pctBiden, query.pctTrump)
 		fmt.Printf("%-8s  %4.1f  %4.1f  %4.1f  %-s\n", query.endDate, query.pctBiden, query.pctTrump, other, query.pollster)
-		if counter >= glob.PollHistoryLimit {
+		if counterScan >= glob.PollHistoryLimit {
 			break
 		}
+	}
+	if counterPrint < 1 {
+		fmt.Println("no data")
 	}
 }
 
@@ -64,18 +77,27 @@ func ReportEC() {
 			stateECV.state)
 		rows := sqlQuery(sqlText)
 
-		counter := 0
+		counterScan := 0
+		counterPrint := 0
 		var query dbparams
 		aveBidenPct := 0.0
 		aveTrumpPct := 0.0
 		endDate := ""
 		for rows.Next() {
-			counter += 1
+			counterScan += 1
 			err := rows.Scan(&query.endDate, &query.pctBiden, &query.pctTrump)
 			if err != nil {
-				log.Fatalf("ReportEC: rows.Scan failed, row count: %d, reason: %s\n", counter, err.Error())
+				log.Fatalf("ReportEC: rows.Scan failed, row count: %d, reason: %s\n", counterScan, err.Error())
 			}
-			if counter == 1 {
+			tm, err := YYYY_MM_DDtoTime(query.endDate)
+			if err != nil {
+				log.Fatalf("ReportEC: Cannot parse start date: %s, reason: %s\n\n", query.endDate, err.Error())
+			}
+			if tm.Before(glob.DateThreshold) {
+				continue
+			}
+			counterPrint += 1
+			if counterScan == 1 {
 				endDate = query.endDate
 			}
 			aveBidenPct += query.pctBiden
@@ -83,14 +105,19 @@ func ReportEC() {
 			aveTrumpPct += query.pctTrump
 			arrayTrumpPct = append(arrayTrumpPct, query.pctTrump)
 			arrayOtherPct = append(arrayOtherPct, CalcOther(query.pctBiden, query.pctTrump))
-			if counter >= glob.PollHistoryLimit {
+			if counterScan >= glob.PollHistoryLimit {
 				break
 			}
 		}
 
+		if counterPrint < 1 {
+			fmt.Printf("%-2s  no data\n", stateECV.state)
+			continue
+		}
+
 		// Averages for this state.
-		aveBidenPct /= float64(counter)
-		aveTrumpPct /= float64(counter)
+		aveBidenPct /= float64(counterScan)
+		aveTrumpPct /= float64(counterScan)
 		aveOtherPct := CalcOther(aveBidenPct, aveTrumpPct)
 		leader := ""
 		var increBiden, increTrump, increTossup int

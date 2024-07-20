@@ -12,12 +12,13 @@ import (
 type paramsStruct struct {
 	// Embedded structs are not treated as embedded in YAML by default. To do that,
 	// add the ",inline" annotation below
-	PollHistoryLimit string `yaml:"PollHistoryLimit"`
-	TossupThreshold  string `yaml:"TossupThreshold"`
-	ECVAlgorithm     string `yaml:"ECVAlgorithm"`
 	Battleground     string `yaml:"Battleground"`
-	PlotWidth        string `yaml:"PlotWidth"`
+	DateThreshold    string `yaml:"DateThreshold"`
+	ECVAlgorithm     string `yaml:"ECVAlgorithm"`
+	PollHistoryLimit string `yaml:"PollHistoryLimit"`
 	PlotHeight       string `yaml:"PlotHeight"`
+	PlotWidth        string `yaml:"PlotWidth"`
+	TossupThreshold  string `yaml:"TossupThreshold"`
 }
 
 func GetConfig() {
@@ -32,6 +33,12 @@ func GetConfig() {
 	if err != nil {
 		log.Fatalf("yaml.Unmarshal from %s failed, reason: %s\n", glob.CfgFile, err.Error())
 	}
+
+	glob.DateThreshold, err = YYYY_MM_DDtoTime(params.DateThreshold)
+	if err != nil {
+		log.Fatalf("GetConfig: Cannot parse start date: %s, reason: %s\n", params.DateThreshold, err.Error())
+	}
+	log.Printf("GetConfig: DateThreshold: %s", params.DateThreshold)
 
 	glob.ECVAlgorithm, err = strconv.Atoi(params.ECVAlgorithm)
 	if err != nil {

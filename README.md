@@ -3,7 +3,7 @@ Analysis of the 2024 USA Presidential Election State Polls
 
 #### Overview
 
-This project analyzes the 2024 USA Presididential Election polling data, available from https://electoral-vote.com/.  To date, there doesn't seem to be much in the way of polling data compared to other years.
+This project analyzes the 2024 USA Presididential Election polling data, available from https://electoral-vote.com/.  To date, there doesn'tm seem to be much in the way of polling data compared to other years.
 
 The ```ppolls2024``` executable will create directories and files as needed on-the-fly. Make sure that the standard Go $HOME/go/bin directory is in the $PATH. Similar advice for Windows users (you would know better than me).
 
@@ -67,7 +67,7 @@ If the the Internet poll data and the local poll data are still the same, the fo
 
 #### Licensing
 
-This is NOT commercial software; instead, usage is covered by the GNU General Public License version 3 (2007). In a nutshell, please feel free to use the project and share it as you will but please don't sell it. Thank you!
+This is NOT commercial software; instead, usage is covered by the GNU General Public License version 3 (2007). In a nutshell, please feel free to use the project and share it as you will but please don'tm sell it. Thank you!
 
 See the LICENSE file for the GNU licensing information.
 

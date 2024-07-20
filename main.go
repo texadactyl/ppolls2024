@@ -70,6 +70,14 @@ func main() {
 		}
 	}
 
+	// If plotting, delete old plots.
+	if glob.FlagPlot {
+		err := os.RemoveAll(glob.DirPlots)
+		if err != nil {
+			log.Fatalf(fmt.Sprintf("os.Remove(%s) failed, reason: %s", glob.DirPlots, err.Error()))
+		}
+	}
+
 	// Create subdirectories.
 	helpers.MakeDir(glob.DirCsv)
 	helpers.MakeDir(glob.DirDatabase)

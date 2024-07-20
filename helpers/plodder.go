@@ -20,6 +20,7 @@ import (
 )
 
 func plotOneState(state string, endDateArray []string, bidenPctArray, trumpPctArray, otherPctArray []float64) {
+	glob := global.GetGlobalRef()
 	RED := color.NRGBA{R: 255, A: 255}
 	//GREEN := color.NRGBA{G: 255, A: 255}
 	BLUE := color.NRGBA{B: 255, A: 255}
@@ -33,18 +34,22 @@ func plotOneState(state string, endDateArray []string, bidenPctArray, trumpPctAr
 	plt.Y.Label.Text = "Voter %"
 	plt.Add(plotter.NewGrid())
 
-	// randomPoints returns some random x, y points
-	// with some interesting kind of trend.
+	countPoints := 0
+
 	linePoints := func(dateArray []string, dependent []float64) plotter.XYs {
 		arraySizes := len(dateArray)
 		pts := make(plotter.XYs, arraySizes)
 		for ix := range pts {
 			layout := string(time.RFC3339[:10])
-			t, err := time.Parse(layout, dateArray[ix])
+			tm, err := time.Parse(layout, dateArray[ix])
 			if err != nil {
 				log.Fatalf("plotOneState::linePoints: time.Parse(%s, %s) failed, reason: %s\n", layout, dateArray[ix], err.Error())
 			}
-			timeInt64 := time.Date(t.Year(), t.Month(), t.Day(), 12, 30, 30, 0, time.UTC).Unix()
+			if tm.Before(glob.DateThreshold) {
+				continue
+			}
+			countPoints++
+			timeInt64 := time.Date(tm.Year(), tm.Month(), tm.Day(), 12, 30, 30, 0, time.UTC).Unix()
 			pts[ix].X = float64(timeInt64)
 			pts[ix].Y = dependent[ix]
 		}
@@ -52,6 +57,12 @@ func plotOneState(state string, endDateArray []string, bidenPctArray, trumpPctAr
 	}
 
 	data := linePoints(endDateArray, bidenPctArray)
+	if countPoints < 1 {
+		return
+	}
+
+	log.Printf("State plot for %s .....\n", state)
+
 	line, points, err := plotter.NewLinePoints(data)
 	if err != nil {
 		log.Fatalf("plotOneState: internal error diagnosed in plotter.NewLinePoints(biden), reason: %s\n" + err.Error())
@@ -84,7 +95,6 @@ func plotOneState(state string, endDateArray []string, bidenPctArray, trumpPctAr
 	points.Color = BLACK
 	plt.Add(line, points)
 
-	glob := global.GetGlobalRef()
 	err = plt.Save(vg.Length(glob.PlotWidth)*vg.Centimeter,
 		vg.Length(glob.PlotHeight)*vg.Centimeter,
 		fmt.Sprintf("%s/%s.png", glob.DirPlots, state))
@@ -97,7 +107,6 @@ func Plodder() {
 	glob := global.GetGlobalRef()
 	var stateECV ECVote
 	for _, stateECV = range stateECVTable {
-		log.Printf("State plot for %s .....\n", stateECV.state)
 		// For the given state, query from the most recent to the least recent polling.
 		sqlText := fmt.Sprintf("SELECT end_date, pct_biden, pct_trump FROM history WHERE state = '%s' ORDER BY end_date DESC",
 			stateECV.state)
