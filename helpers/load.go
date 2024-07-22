@@ -47,13 +47,13 @@ func Load(dirCsv, fileName string) {
 
 		// Collect all the column values.
 		pollFields.state = strings.ToUpper(colArray[0])
-		pollFields.pctBiden, err = strconv.ParseFloat(colArray[1], 64)
+		pollFields.pctDem, err = strconv.ParseFloat(colArray[1], 64)
 		if err != nil {
-			log.Fatalf("Load: Biden pct from %s is not a valid float at line %d\n", fullPath, lineCounter)
+			log.Fatalf("Load: Dem pct from %s is not a valid float at line %d\n", fullPath, lineCounter)
 		}
-		pollFields.pctTrump, err = strconv.ParseFloat(colArray[2], 64)
+		pollFields.pctGop, err = strconv.ParseFloat(colArray[2], 64)
 		if err != nil {
-			log.Fatalf("Load: Trump pct from %s is not a valid float at line %d\n", fullPath, lineCounter)
+			log.Fatalf("Load: Gop pct from %s is not a valid float at line %d\n", fullPath, lineCounter)
 		}
 		month, err := MonthToInt(colArray[4])
 		if err != nil {

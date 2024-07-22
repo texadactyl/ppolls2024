@@ -19,7 +19,7 @@ import (
 	"gonum.org/v1/plot/vg/draw"
 )
 
-func plotOneState(state string, endDateArray []string, bidenPctArray, trumpPctArray, otherPctArray []float64) {
+func plotOneState(state string, endDateArray []string, demPctArray, gopPctArray, otherPctArray []float64) {
 	glob := global.GetGlobalRef()
 	RED := color.NRGBA{R: 255, A: 255}
 	//GREEN := color.NRGBA{G: 255, A: 255}
@@ -56,7 +56,7 @@ func plotOneState(state string, endDateArray []string, bidenPctArray, trumpPctAr
 		return pts
 	}
 
-	data := linePoints(endDateArray, bidenPctArray)
+	data := linePoints(endDateArray, demPctArray)
 	if countPoints < 1 {
 		return
 	}
@@ -65,7 +65,7 @@ func plotOneState(state string, endDateArray []string, bidenPctArray, trumpPctAr
 
 	line, points, err := plotter.NewLinePoints(data)
 	if err != nil {
-		log.Fatalf("plotOneState: internal error diagnosed in plotter.NewLinePoints(biden), reason: %s\n" + err.Error())
+		log.Fatalf("plotOneState: internal error diagnosed in plotter.NewLinePoints(dem), reason: %s\n" + err.Error())
 	}
 	line.Color = BLUE
 	line.Width = 2
@@ -73,10 +73,10 @@ func plotOneState(state string, endDateArray []string, bidenPctArray, trumpPctAr
 	points.Color = BLACK
 	plt.Add(line, points)
 
-	data = linePoints(endDateArray, trumpPctArray)
+	data = linePoints(endDateArray, gopPctArray)
 	line, points, err = plotter.NewLinePoints(data)
 	if err != nil {
-		log.Fatalf("plotOneState: internal error diagnosed in plotter.NewLinePoints(trump), reason: %s\n" + err.Error())
+		log.Fatalf("plotOneState: internal error diagnosed in plotter.NewLinePoints(gop), reason: %s\n" + err.Error())
 	}
 	line.Color = RED
 	line.Width = 2
@@ -108,32 +108,32 @@ func Plodder() {
 	var stateECV ECVote
 	for _, stateECV = range stateECVTable {
 		// For the given state, query from the most recent to the least recent polling.
-		sqlText := fmt.Sprintf("SELECT end_date, pct_biden, pct_trump FROM history WHERE state = '%s' ORDER BY end_date DESC",
+		sqlText := fmt.Sprintf("SELECT end_date, pct_dem, pct_gop FROM history WHERE state = '%s' ORDER BY end_date DESC",
 			stateECV.state)
 		rows := sqlQuery(sqlText)
 
 		var query dbparams
 		var endDateArray []string
-		var bidenPctArray []float64
-		var trumpPctArray []float64
+		var demPctArray []float64
+		var gopPctArray []float64
 		var otherPctArray []float64
 		counter := 0
 		for rows.Next() {
 			counter += 1
-			err := rows.Scan(&query.endDate, &query.pctBiden, &query.pctTrump)
+			err := rows.Scan(&query.endDate, &query.pctDem, &query.pctGop)
 			if err != nil {
 				log.Fatalf("Plodder: rows.Scan failed, row count: %d, reason: %s\n", counter, err.Error())
 			}
 			endDateArray = append(endDateArray, query.endDate)
-			bidenPctArray = append(bidenPctArray, query.pctBiden)
-			trumpPctArray = append(trumpPctArray, query.pctTrump)
-			curOtherPct := CalcOther(query.pctBiden, query.pctTrump)
+			demPctArray = append(demPctArray, query.pctDem)
+			gopPctArray = append(gopPctArray, query.pctGop)
+			curOtherPct := CalcOther(query.pctDem, query.pctGop)
 			otherPctArray = append(otherPctArray, curOtherPct)
 			if counter >= glob.PollHistoryLimit {
 				break
 			}
 		}
-		plotOneState(stateECV.state, endDateArray, bidenPctArray, trumpPctArray, otherPctArray)
+		plotOneState(stateECV.state, endDateArray, demPctArray, gopPctArray, otherPctArray)
 	}
 	log.Println("State plots completed")
 }

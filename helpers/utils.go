@@ -186,9 +186,9 @@ func StateToECV(state string) int {
 	return -1 // dummy return
 }
 
-// Calculate not Biden nor Trump.
-func CalcOther(biden, trump float64) float64 {
-	return 100.0 - (biden + trump)
+// Calculate not Dem nor Gop.
+func CalcOther(dem, gop float64) float64 {
+	return 100.0 - (dem + gop)
 }
 
 // Trend calculation.
@@ -233,21 +233,21 @@ ECVAward1 - ECV Award Algorithm 1.
 
 	If the difference is below the tossup threshold, then this state is a tossup.
 */
-func ECVAward1(stateVotes int, pctBiden, pctTrump float64) (string, int, int, int) {
+func ECVAward1(stateVotes int, pctDem, pctGop float64) (string, int, int, int) {
 	glob := global.GetGlobalRef()
-	pctOther := CalcOther(pctBiden, pctTrump)
+	pctOther := CalcOther(pctDem, pctGop)
 
-	pctBiden += pctOther * pctBiden / 100.0
-	pctTrump += pctOther * pctTrump / 100.0
-	diff := math.Abs(pctBiden - pctTrump)
+	pctDem += pctOther * pctDem / 100.0
+	pctGop += pctOther * pctGop / 100.0
+	diff := math.Abs(pctDem - pctGop)
 
 	if diff < glob.TossupThreshold {
 		return "TOSSUP", 0, 0, stateVotes
 	} else {
-		if pctBiden > pctTrump {
-			return "Biden", stateVotes, 0, 0
+		if pctDem > pctGop {
+			return "Dem", stateVotes, 0, 0
 		} else {
-			return "Trump", 0, stateVotes, 0
+			return "Gop", 0, stateVotes, 0
 		}
 	}
 }
@@ -261,17 +261,17 @@ ECVAward2 - ECV Award Algorithm 2.
 	If the "Other" percentage exceeds the difference, then flag this state on return.
 	If the difference is below the tossup threshold, then this state is a tossup.
 */
-func ECVAward2(stateVotes int, pctBiden, pctTrump float64) (string, int, int, int, string) {
+func ECVAward2(stateVotes int, pctDem, pctGop float64) (string, int, int, int, string) {
 	glob := global.GetGlobalRef()
-	diff := math.Abs(pctBiden - pctTrump)
-	pctOther := CalcOther(pctBiden, pctTrump)
+	diff := math.Abs(pctDem - pctGop)
+	pctOther := CalcOther(pctDem, pctGop)
 	if diff < glob.TossupThreshold {
 		return "TOSSUP", 0, 0, stateVotes, getFactorString(pctOther > diff)
 	}
-	if pctBiden > pctTrump {
-		return "Biden", stateVotes, 0, 0, getFactorString(pctOther > diff)
+	if pctDem > pctGop {
+		return "Dem", stateVotes, 0, 0, getFactorString(pctOther > diff)
 	}
-	return "Trump", 0, stateVotes, 0, getFactorString(pctOther > diff)
+	return "Gop", 0, stateVotes, 0, getFactorString(pctOther > diff)
 }
 
 /*
@@ -283,20 +283,20 @@ ECVAward3 - ECV Award Algorithm 3.
 	If the "Other" percentage exceeds the difference, then this state is a tossup.
 	If the difference is below the tossup threshold, then this state is a tossup.
 */
-func ECVAward3(stateVotes int, pctBiden, pctTrump float64) (string, int, int, int, string) {
+func ECVAward3(stateVotes int, pctDem, pctGop float64) (string, int, int, int, string) {
 	glob := global.GetGlobalRef()
-	diff := math.Abs(pctBiden - pctTrump)
-	pctOther := CalcOther(pctBiden, pctTrump)
+	diff := math.Abs(pctDem - pctGop)
+	pctOther := CalcOther(pctDem, pctGop)
 	if pctOther > diff {
 		return "TOSSUP", 0, 0, stateVotes, getFactorString(true)
 	}
 	if diff < glob.TossupThreshold {
 		return "TOSSUP", 0, 0, stateVotes, " "
 	}
-	if pctBiden > pctTrump {
-		return "Biden", stateVotes, 0, 0, " "
+	if pctDem > pctGop {
+		return "Dem", stateVotes, 0, 0, " "
 	}
-	return "Trump", 0, stateVotes, 0, " "
+	return "Gop", 0, stateVotes, 0, " "
 }
 
 // searchSlice looks for a target string in an array of strings.

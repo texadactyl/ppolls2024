@@ -17,8 +17,8 @@ const tableHistory = "history"
 const colDateStamp = "date_stamp"
 const colTimeStamp = "time_stamp"
 const colState = "state"
-const colPctBiden = "pct_biden"
-const colPctTrump = "pct_trump"
+const colPctDem = "pct_dem"
+const colPctGop = "pct_gop"
 const colPctZero = "pct_zero"
 const colStartDate = "start_date"
 const colEndDate = "end_date"
@@ -32,8 +32,8 @@ type dbparams struct {
 	state     string
 	startDate string
 	endDate   string
-	pctBiden  float64
-	pctTrump  float64
+	pctDem    float64
+	pctGop    float64
 	pollster  string
 }
 
@@ -105,8 +105,8 @@ func initDB() {
 	sqlText += colState + " VARCHAR NOT NULL, "
 	sqlText += colStartDate + " VARCHAR NOT NULL, "
 	sqlText += colEndDate + " VARCHAR NOT NULL, "
-	sqlText += colPctBiden + " FLOAT NOT NULL, "
-	sqlText += colPctTrump + " FLOAT NOT NULL, "
+	sqlText += colPctDem + " FLOAT NOT NULL, "
+	sqlText += colPctGop + " FLOAT NOT NULL, "
 	sqlText += colPollster + " VARCHAR NOT NULL, "
 	sqlText += "PRIMARY KEY (" + colState + ", " + colEndDate + ") )"
 	sqlFunc(sqlText)
@@ -206,7 +206,7 @@ func DBStore(fields dbparams) {
 	timeUTC := "'" + GetUtcTime() + "'"
 	sqlText := "INSERT OR REPLACE INTO " + tableHistory + " VALUES("
 	sqlText += dateUTC + ", " + timeUTC + ",\"" + fields.state + "\", \"" + fields.startDate + "\", \"" + fields.endDate
-	caboose := fmt.Sprintf("\", %f, %f, \"%s\" )", fields.pctBiden, fields.pctTrump, fields.pollster)
+	caboose := fmt.Sprintf("\", %f, %f, \"%s\" )", fields.pctDem, fields.pctGop, fields.pollster)
 	sqlText += caboose
 
 	sqlFunc(sqlText)
