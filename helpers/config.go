@@ -6,13 +6,9 @@ import (
 	"os"
 	"ppolls2024/global"
 	"strconv"
-	"strings"
 )
 
 type paramsStruct struct {
-	// Embedded structs are not treated as embedded in YAML by default. To do that,
-	// add the ",inline" annotation below
-	Battleground     string `yaml:"Battleground"`
 	DateThreshold    string `yaml:"DateThreshold"`
 	ECVAlgorithm     string `yaml:"ECVAlgorithm"`
 	PollHistoryLimit string `yaml:"PollHistoryLimit"`
@@ -46,9 +42,6 @@ func GetConfig() {
 		log.Fatalf("strconv.Atoi(ECVAlgorithm) from %s failed, reason: %s\n", glob.CfgFile, err.Error())
 	}
 	log.Printf("GetConfig: ECVAlgorithm: %d", glob.ECVAlgorithm)
-
-	glob.Battleground = strings.Split(params.Battleground, ",")
-	log.Printf("GetConfig: Battleground states: %s", params.Battleground)
 
 	glob.PlotWidth, err = strconv.ParseFloat(params.PlotWidth, 64)
 	if err != nil {

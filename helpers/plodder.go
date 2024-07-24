@@ -105,11 +105,11 @@ func plotOneState(state string, endDateArray []string, demPctArray, gopPctArray,
 
 func Plodder() {
 	glob := global.GetGlobalRef()
-	var stateECV ECVote
-	for _, stateECV = range stateECVTable {
+	var stateTableEntry global.StateTableEntry_t
+	for _, stateTableEntry = range global.StateTable {
 		// For the given state, query from the most recent to the least recent polling.
 		sqlText := fmt.Sprintf("SELECT end_date, pct_dem, pct_gop FROM history WHERE state = '%s' ORDER BY end_date DESC",
-			stateECV.state)
+			stateTableEntry.Stcode)
 		rows := sqlQuery(sqlText)
 
 		var query dbparams
@@ -133,7 +133,7 @@ func Plodder() {
 				break
 			}
 		}
-		plotOneState(stateECV.state, endDateArray, demPctArray, gopPctArray, otherPctArray)
+		plotOneState(stateTableEntry.Stcode, endDateArray, demPctArray, gopPctArray, otherPctArray)
 	}
 	log.Println("State plots completed")
 }

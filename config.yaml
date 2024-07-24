@@ -1,6 +1,5 @@
 ECVAlgorithm:       2
-Battleground:       AZ,GA,MI,MN,NH,NV,PA,VA,WI
-DateThreshold:      2024-06-27
+DateThreshold:      2024-07-22
 PlotHeight:         10.0
 PlotWidth:          10.0
 PollHistoryLimit:   3
@@ -29,8 +28,6 @@ TossupThreshold:    3.01
     #    * It's a tossup.
     # If the difference between candidates is below the tossup threshold,
     #   it's a tossup.
-
-# Battleground ([]string): This is the list of battleground states that are in effect with specifying -b on the command line.
 
 # DateThreshold: Eliminate any polls before this date in the reports and plots.
 
