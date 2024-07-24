@@ -19,7 +19,7 @@ import (
 	"gonum.org/v1/plot/vg/draw"
 )
 
-func plotOneState(state string, endDateArray []string, demPctArray, gopPctArray, otherPctArray []float64) {
+func plotOneState(state string, endDateArray []string, demPctArray, gopPctArray, otherPctArray []float64) int {
 	glob := global.GetGlobalRef()
 	RED := color.NRGBA{R: 255, A: 255}
 	//GREEN := color.NRGBA{G: 255, A: 255}
@@ -58,7 +58,7 @@ func plotOneState(state string, endDateArray []string, demPctArray, gopPctArray,
 
 	data := linePoints(endDateArray, demPctArray)
 	if countPoints < 1 {
-		return
+		return 0 // We did NOT generate a plot for the current state.
 	}
 
 	log.Printf("State plot for %s .....\n", state)
@@ -101,11 +101,14 @@ func plotOneState(state string, endDateArray []string, demPctArray, gopPctArray,
 	if err != nil {
 		log.Fatalln(err.Error())
 	}
+
+	return 1 // We generated a plot for the current state.
 }
 
 func Plodder() {
 	glob := global.GetGlobalRef()
 	var stateTableEntry global.StateTableEntry_t
+	counterStates := 0
 	for _, stateTableEntry = range global.StateTable {
 		// For the given state, query from the most recent to the least recent polling.
 		sqlText := fmt.Sprintf("SELECT end_date, pct_dem, pct_gop FROM history WHERE state = '%s' ORDER BY end_date DESC",
@@ -117,23 +120,25 @@ func Plodder() {
 		var demPctArray []float64
 		var gopPctArray []float64
 		var otherPctArray []float64
-		counter := 0
+		counterRows := 0
 		for rows.Next() {
-			counter += 1
+			counterRows += 1
 			err := rows.Scan(&query.endDate, &query.pctDem, &query.pctGop)
 			if err != nil {
-				log.Fatalf("Plodder: rows.Scan failed, row count: %d, reason: %s\n", counter, err.Error())
+				log.Fatalf("Plodder: rows.Scan failed, row count: %d, reason: %s\n", counterRows, err.Error())
 			}
 			endDateArray = append(endDateArray, query.endDate)
 			demPctArray = append(demPctArray, query.pctDem)
 			gopPctArray = append(gopPctArray, query.pctGop)
 			curOtherPct := CalcOther(query.pctDem, query.pctGop)
 			otherPctArray = append(otherPctArray, curOtherPct)
-			if counter >= glob.PollHistoryLimit {
+			if counterRows >= glob.PollHistoryLimit {
 				break
 			}
 		}
-		plotOneState(stateTableEntry.Stcode, endDateArray, demPctArray, gopPctArray, otherPctArray)
+		if counterRows > 0 {
+			counterStates += plotOneState(stateTableEntry.Stcode, endDateArray, demPctArray, gopPctArray, otherPctArray)
+		}
 	}
-	log.Println("State plots completed")
+	log.Printf("State plots completed: %d\n", counterStates)
 }
